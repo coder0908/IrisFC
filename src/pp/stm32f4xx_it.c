@@ -192,34 +192,34 @@ void USART1_IRQHandler(void)
   */
 void USART6_IRQHandler(void)
 {
-	switch (gps.packet_buf_cnt) {
+	switch (g_gps.packet_buf_cnt) {
 	case 0:
-		if (gps.uart_rx_buf[gps.uart_rx_buf_cnt] == 0xb5) {
-			gps.packet_buf[gps.packet_buf_cnt] = gps.uart_rx_buf[gps.uart_rx_buf_cnt];
+		if (g_gps.uart_rx_buf[g_gps.uart_rx_buf_cnt] == 0xb5) {
+			g_gps.packet_buf[g_gps.packet_buf_cnt] = g_gps.uart_rx_buf[g_gps.uart_rx_buf_cnt];
 
-			gps.packet_buf_cnt++;
-			gps.uart_rx_buf_cnt++;
+			g_gps.packet_buf_cnt++;
+			g_gps.uart_rx_buf_cnt++;
 		}
 		break;
 	case 1:
-		if (gps.uart_rx_buf[gps.uart_rx_buf_cnt] == 0x62) {
-			gps.packet_buf[gps.packet_buf_cnt] = gps.uart_rx_buf[gps.uart_rx_buf_cnt];
+		if (g_gps.uart_rx_buf[g_gps.uart_rx_buf_cnt] == 0x62) {
+			g_gps.packet_buf[g_gps.packet_buf_cnt] = g_gps.uart_rx_buf[g_gps.uart_rx_buf_cnt];
 
-			gps.packet_buf_cnt++;
-			gps.uart_rx_buf_cnt++;
+			g_gps.packet_buf_cnt++;
+			g_gps.uart_rx_buf_cnt++;
 		} else {
-			gps.packet_buf_cnt = 0;
+			g_gps.packet_buf_cnt = 0;
 		}
 		break;
 	default:
-		if (gps.packet_buf_cnt >= gps.packet_buf_size) {
+		if (g_gps.packet_buf_cnt >= g_gps.packet_buf_size) {
 			vmd_fail_handler();
 			break;
 		}
-		gps.packet_buf[gps.packet_buf_cnt] = gps.uart_rx_buf[gps.uart_rx_buf_cnt];
+		g_gps.packet_buf[g_gps.packet_buf_cnt] = g_gps.uart_rx_buf[g_gps.uart_rx_buf_cnt];
 
-		gps.packet_buf_cnt++;
-		gps.uart_rx_buf_cnt++;
+		g_gps.packet_buf_cnt++;
+		g_gps.uart_rx_buf_cnt++;
 		break;
 
 	}

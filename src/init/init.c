@@ -24,11 +24,7 @@ int _write(int file, char *p, int len)
 bool setup()
 {
 	bool ret = false;
-//
-//	ret = trcivr_init();
-//	if (!ret) {
-//		return false;
-//	}
+
 
 //	ret = consur_init();
 //	if (!ret) {
@@ -49,14 +45,13 @@ bool setup()
 
 static int16_t g_x_gyro_lsb, g_y_gyro_lsb, g_z_gyro_lsb;
 static int16_t g_x_accel_lsb, g_y_accel_lsb, g_z_accel_lsb;
-static float g_x_gyro_dps, g_y_gyro_dps, g_z_gyro_dps;
+//static float g_x_gyro_dps, g_y_gyro_dps, g_z_gyro_dps;
 
 void loop(void)
 {
 	if (icm20602_is_data_ready(&g_imu)) {
 		bool tmp;
 		tmp = icm20602_get_accel_gyro_lsb(&g_imu, &g_x_accel_lsb, &g_y_accel_lsb, &g_z_accel_lsb, &g_x_gyro_lsb, &g_y_gyro_lsb, &g_z_gyro_lsb);
-		//tmp = icm20602_parse_gyro(&g_imu, g_x_gyro_lsb, g_y_gyro_lsb, g_z_gyro_lsb, &g_x_gyro_dps, &g_y_gyro_dps, &g_z_gyro_dps);
 		tmp = icm20602_calc_angle_compfilter(&g_imu, g_x_accel_lsb, g_y_accel_lsb, g_z_accel_lsb, g_x_gyro_lsb, g_y_gyro_lsb, g_z_gyro_lsb);
 
 
@@ -76,23 +71,5 @@ void loop(void)
 
 		HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 	}
-//	for (uint32_t i=0; i<1800; i++) {
-//
-//		servo_write(&bldcLeftMot, i);
-//		servo_write(&bldcRightMot, i);
-//		servo_write(&servoLeftAil, i);
-//		servo_write(&servoRightAil,i);
-//		servo_write(&servoEle, i);
-//		servo_write(&servoRud, i);
-//		servo_write(&servoLan, i);
-//		servo_write(&servoLeftFlap, i);
-//		servo_write(&servoRightFlap, i);
-//		HAL_Delay(10);
-//	}
-//	uint8_t receiver_buf[1];
-//	HAL_StatusTypeDef status = HAL_UART_Receive(&huart2, receiver_buf, 1, 1000);
-//	if (status == HAL_OK) {
-//		HAL_UART_Transmit(&huart1, receiver_buf, 1, 1000);
-//	}
 }
 

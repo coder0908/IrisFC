@@ -9,12 +9,12 @@
 #include "servo_driver.h"
 #include "vmd.h"
 
-static uint32_t map(uint16_t x, uint32_t inMin, uint32_t inMax, uint32_t outMin, uint32_t outMax)
+static uint32_t map(uint16_t x, uint32_t min_in, uint32_t max_in, uint32_t min_out, uint32_t max_out)
 {
-  return (x - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+  return (x - min_in) * (max_out - min_out) / (max_in - min_in) + min_out;
 }
 
-bool servo_init(struct Servo *servo, TIM_HandleTypeDef *htim, uint32_t channel, uint32_t minCcr, uint32_t maxCcr)
+bool servo_init(struct Servo *servo, TIM_HandleTypeDef *htim, uint32_t channel, uint32_t min_ccr, uint32_t max_ccr)
 {
 	VMD_ASSERT_PARAM(servo);
 	VMD_ASSERT_PARAM(htim);
@@ -22,8 +22,8 @@ bool servo_init(struct Servo *servo, TIM_HandleTypeDef *htim, uint32_t channel, 
 	servo->htim = htim;
 	servo->channel = channel;
 
-	servo->minCcr = minCcr;
-	servo->maxCcr = maxCcr;
+	servo->min_ccr = min_ccr;
+	servo->max_ccr = max_ccr;
 
 	HAL_StatusTypeDef spiStatus = HAL_TIM_PWM_Start(servo->htim, servo->channel);
 	if (spiStatus != HAL_OK) {
@@ -42,13 +42,13 @@ bool servo_init(struct Servo *servo, TIM_HandleTypeDef *htim, uint32_t channel, 
 //	return true;
 //}
 
-bool servo_write(struct Servo *servo, uint32_t between0To1800)
+bool servo_write(struct Servo *servo, uint32_t between0_to_1800)
 {
 	VMD_ASSERT_PARAM(servo);
-	VMD_ASSERT_PARAM(between0To1800 <= 1800);
-	VMD_ASSERT_PARAM(between0To1800 >= 0);
+	VMD_ASSERT_PARAM(between0_to_1800 <= 1800);
+	VMD_ASSERT_PARAM(between0_to_1800 >= 0);
 
-	uint32_t ccr = map(between0To1800, 0, 1800, servo->minCcr, servo->maxCcr);
+	uint32_t ccr = map(between0_to_1800, 0, 1800, servo->min_ccr, servo->max_ccr);
 
 	__HAL_TIM_SET_COMPARE(servo->htim, servo->channel, ccr);
 

@@ -16,11 +16,11 @@ struct Servo {
 	TIM_HandleTypeDef *htim;
 	uint32_t channel;
 
-	uint32_t minCcr;
-	uint32_t maxCcr;
+	uint32_t min_ccr;
+	uint32_t max_ccr;
 };
 
-bool servo_init(struct Servo *servo, TIM_HandleTypeDef *htim, uint32_t channel, uint32_t minCcr, uint32_t maxCcr);
-bool servo_write(struct Servo *servo, uint32_t between0To1800);
+bool servo_init(struct Servo *servo, TIM_HandleTypeDef *htim, uint32_t channel, uint32_t min_ccr, uint32_t max_ccr);
+bool servo_write(struct Servo *servo, uint32_t between0_to_1800);
 
 #endif /* __SERVO_DRIVER_H__ */

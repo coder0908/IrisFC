@@ -14,8 +14,8 @@
 
 
 
-extern struct ubx_gps gps;
-extern struct ubx_nav_posllh gps_nav_posllh;
+extern struct ubx_gps g_gps;
+extern struct ubx_nav_posllh g_gps_nav_posllh;
 
 bool gps_init();
 
