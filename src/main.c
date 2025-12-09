@@ -8,9 +8,11 @@
 #include "app/app.h"
 #include "main.h"
 
+
+
 int main()
 {
-	pp_init();
+	platform_hal_init();
 	if (!setup()) {
 
 		return -1;
@@ -26,7 +28,4 @@ int main()
 }
 
 
-/*
-
- */
 

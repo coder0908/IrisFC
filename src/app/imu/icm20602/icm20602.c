@@ -1,5 +1,5 @@
 /*
- * imu.c
+ * icm20602.c
  *
  *  Created on: Jun 22, 2025
  *      Author: coder0908
@@ -7,8 +7,9 @@
 
 
 #include "platform/hal/platform_hal.h"
-#include "drivers/icm20602_driver/icm20602_driver.h"
-#include "imu.h"
+#include "spi.h"
+#include "drivers/icm20602/icm20602.h"
+#include "icm20602.h"
 
 
 static struct icm20602 g_imu;
@@ -18,7 +19,7 @@ bool imu_init()
 {
 	bool ret;
 
-	ret = icm20602_init(&g_imu, &hspi2, ICM20602_0_CS_GPIO_Port, ICM20602_0_CS_Pin, ICM20602_0_READY_GPIO_Port, ICM20602_0_READY_Pin, 4000.0/65536.0, 32.0/65536.0, 0.996);
+	ret = icm20602_init(&g_imu, &hspi2, ICM20602_CS_GPIO_Port, ICM20602_CS_Pin, ICM20602_INT_GPIO_Port, ICM20602_INT_Pin, 4000.0/65536.0, 32.0/65536.0, 0.996);
 	HAL_Delay(50);
 	if (!ret) {
 		return false;

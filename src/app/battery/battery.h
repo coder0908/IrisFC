@@ -13,8 +13,7 @@
 
 
 bool battery_init();
-
-void battery_read_voltage();
+void battery_loop();
 
 
 

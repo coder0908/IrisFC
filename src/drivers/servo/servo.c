@@ -6,7 +6,7 @@
  */
 
 #include <assert.h>
-#include "servo_driver.h"
+#include "servo.h"
 
 uint32_t map(uint32_t x, uint32_t min_in, uint32_t max_in, uint32_t min_out, uint32_t max_out)
 {

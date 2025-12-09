@@ -1,5 +1,5 @@
-	/*
- * sys.h
+/*
+ * platform_hal.h
  *
  *  Created on: Oct 8, 2025
  *      Author: coder0908
@@ -7,15 +7,8 @@
 
 #pragma once
 
-#include "stm32f4xx_hal.h"	//always top
-#include "adc.h"
-#include "dma.h"
-#include "gpio.h"
-#include "i2c.h"
-#include "spi.h"
-#include "tim.h"
-#include "usart.h"
 #include <stdbool.h>
+#include "stm32f4xx_hal.h"
 
 #define DEBUG_LED_Pin GPIO_PIN_13
 #define DEBUG_LED_GPIO_Port GPIOC
@@ -23,20 +16,24 @@
 #define RECEIVER_TX_GPIO_Port GPIOA
 #define RECEIVER_RX_Pin GPIO_PIN_3
 #define RECEIVER_RX_GPIO_Port GPIOA
-#define EXBAT1_Pin GPIO_PIN_4
-#define EXBAT1_GPIO_Port GPIOA
-#define EXBAT2_Pin GPIO_PIN_7
+#define EXBAT2_Pin GPIO_PIN_4
 #define EXBAT2_GPIO_Port GPIOA
+#define BNO08X_NRST_Pin GPIO_PIN_5
+#define BNO08X_NRST_GPIO_Port GPIOA
+#define BNO08X_INT_Pin GPIO_PIN_6
+#define BNO08X_INT_GPIO_Port GPIOA
+#define EXBAT1_Pin GPIO_PIN_7
+#define EXBAT1_GPIO_Port GPIOA
 #define SERVO_FLAP_R_Pin GPIO_PIN_0
 #define SERVO_FLAP_R_GPIO_Port GPIOB
 #define SERVO_AIL_L_Pin GPIO_PIN_1
 #define SERVO_AIL_L_GPIO_Port GPIOB
-#define DHT11_Pin GPIO_PIN_2
-#define DHT11_GPIO_Port GPIOB
-#define ICM20602_0_READY_Pin GPIO_PIN_12
-#define ICM20602_0_READY_GPIO_Port GPIOB
-#define ICM20602_0_CS_Pin GPIO_PIN_13
-#define ICM20602_0_CS_GPIO_Port GPIOB
+#define BNO08X_CS_Pin GPIO_PIN_2
+#define BNO08X_CS_GPIO_Port GPIOB
+#define ICM20602_INT_Pin GPIO_PIN_12
+#define ICM20602_INT_GPIO_Port GPIOB
+#define ICM20602_CS_Pin GPIO_PIN_13
+#define ICM20602_CS_GPIO_Port GPIOB
 #define BLDC_MOT_L_Pin GPIO_PIN_8
 #define BLDC_MOT_L_GPIO_Port GPIOA
 #define BLDC_MOT_R_Pin GPIO_PIN_9
@@ -59,12 +56,12 @@
 #define SERVO_RUD_GPIO_Port GPIOB
 #define SERVO_AIL_R_Pin GPIO_PIN_7
 #define SERVO_AIL_R_GPIO_Port GPIOB
-#define HMC5883L_SCL_Pin GPIO_PIN_8
-#define HMC5883L_SCL_GPIO_Port GPIOB
-#define HMC5883L_SDA_Pin GPIO_PIN_9
-#define HMC5883L_SDA_GPIO_Port GPIOB
+#define I2C_SCL_Pin GPIO_PIN_8
+#define I2C_SCL_GPIO_Port GPIOB
+#define I2C_SDA_Pin GPIO_PIN_9
+#define I2C_SDA_GPIO_Port GPIOB
 
-void pp_init(void);
+void platform_hal_init(void);
 void Error_Handler(void);
 
 

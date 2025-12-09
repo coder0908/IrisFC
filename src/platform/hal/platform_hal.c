@@ -1,16 +1,23 @@
 /*
- * sys.c
+ * platform_hal.c
  *
  *  Created on: Oct 8, 2025
  *      Author: coder0908
  */
 
 
-#include "platform/hal/platform_hal.h"
+#include "adc.h"
+#include "dma.h"
+#include "i2c.h"
+#include "spi.h"
+#include "tim.h"
+#include "usart.h"
+#include "gpio.h"
+#include "platform_hal.h"
 
 void SystemClock_Config(void);
 
-void pp_init(void)
+void platform_hal_init(void)
 {
 	HAL_Init();
 	SystemClock_Config();

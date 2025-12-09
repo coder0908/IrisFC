@@ -1,5 +1,5 @@
 /*
- * servo.c
+ * icm20602.c
  *
  *  Created on: Jun 28, 2025
  *      Author: coder0908
@@ -82,34 +82,19 @@
 #define	ICM20602_REG_ZA_OFFSET_L	0x7E
 
 
-/**
- * @brief ICM20602 structure definition.
- */
-
 struct icm20602 {
 	 SPI_HandleTypeDef *hspi;
 
 	 GPIO_TypeDef *cs_port;
 	 uint16_t	cs_pin;
 
-	 GPIO_TypeDef *ready_port;
-	 uint16_t	ready_pin;
+	 GPIO_TypeDef *int_port;
+	 uint16_t	int_pin;
+
+	 bool		is_data_ready;
 
 	 float degree_per_lsb;
 	 float g_per_lsb;
-	 float compfilter_alpha;
-
-	 uint32_t prev_time_ms;
-
-	 float x_angle_deg;
-	 float y_angle_deg;
-	 float z_angle_deg;
-
-	 float x_gyro_dps;
-	 float y_gyro_dps;
-	 float z_gyro_dps;
-
-	 float total_accel_vevtor;
 };
 
 
@@ -125,6 +110,7 @@ bool icm20602_get_gyro_lsb(struct icm20602 *imu, int16_t *x_gyro_lsb, int16_t *y
 bool icm20602_get_accel_lsb(struct icm20602 *imu, int16_t *x_accel_lsb, int16_t *y_accel_lsb, int16_t *z_accel_lsb);
 
 bool icm20602_is_data_ready(struct icm20602 *imu);
+void icm20602_irq_handler(struct icm20602 *imu);
 
 bool icm20602_remove_gyro_bias_lsb(struct icm20602 *imu, int16_t x_bias_lsb, int16_t y_bias_lsb, int16_t z_bias_lsb);
 bool icm20602_remove_accel_bias_lsb(struct icm20602 *imu, int16_t x_bias_lsb, int16_t y_bias_lsb, int16_t z_bias_lsb);
@@ -135,8 +121,6 @@ bool icm20602_calibrate_accel(struct icm20602 *imu);
 bool icm20602_parse_gyro(const struct icm20602 *imu, int16_t x_gyro_lsb, int16_t y_gyro_lsb, int16_t z_gyro_lsb, float *x_gyro_dps, float *y_gyro_dps, float *z_gyro_dps);
 bool icm20602_parse_accel(const struct icm20602 *imu, int16_t x_accel_lsb, int16_t y_accel_lsb, int16_t z_accel_lsb, float *x_accel_g, float *y_accel_g, float *z_accel_g);
 
-bool icm20602_calc_angle(struct icm20602 *imu, int16_t x_gyro_lsb, int16_t y_gyro_lsb, int16_t z_gyro_lsb);
-bool icm20602_calc_angle_compfilter(struct icm20602 *imu, int16_t x_accel_lsb, int16_t y_accel_lsb, int16_t z_accel_lsb, int16_t x_gyro_lsb, int16_t y_gyro_lsb, int16_t z_gyro_lsb);
 
 
 

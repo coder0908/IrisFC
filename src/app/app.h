@@ -2,21 +2,13 @@
  * app.h
  *
  *  Created on: May 5, 2025
- *      Author: mia00
+ *      Author: coder0908
  */
 
-#ifndef __APP_H__
-#define __APP_H__
+#pragma once
 
-#include "platform/hal/platform_hal.h"
-#include "app/battery/battery.h"
-#include "app/consur/consur.h"
-#include "app/imu/imu.h"
-#include "app/attitude/attitude.h"
-
-
+#include <stdbool.h>
 
 bool setup();
 void loop(void);
 
-#endif /* __APP_H__ */

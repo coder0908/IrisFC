@@ -121,54 +121,11 @@ uint8_t crsf_calc_crc8_frame(const struct crsf_frame *frame)
 	assert(frame);
 
 	uint8_t crc = 0;
-	for (uint8_t i=CRSF_IDX_TYPE; i<crsf_get_len(frame)-CRSF_LEN_CRC; i++) {
+	for (uint8_t i=CRSF_IDX_TYPE; i<CRSF_IDX_CRC(crsf_get_len(frame)); i++) {
 		crc = crsf_crc8_dvbs2(crc, frame->frame[i]);
 	}
 
 	return crc;
-}
-
-bool crsf_init_frame_queue(struct crsf_frame_queue *queue)
-{
-	assert(queue);
-
-	queue->len = 0;
-	queue->head = 0;
-
-	return true;
-}
-
-bool crsf_push_frame_queue(struct crsf_frame_queue *queue, const struct crsf_frame *frame)
-{
-	assert(queue);
-	assert(queue->len <= CRSF_FRAMESLEN_MAX);
-
-	if (queue->len == CRSF_FRAMESLEN_MAX) {
-		return false;
-	}
-
-	struct crsf_frame *const dest = queue->frames + (queue->head + queue->len) % CRSF_FRAMESLEN_MAX;
-	*dest = *frame;
-	queue->len += 1;
-
-	return true;
-}
-
-bool crsf_pop_frame_queue(struct crsf_frame_queue *queue, struct crsf_frame *frame)
-{
-	assert(queue);
-	assert(frame);
-
-	if (queue->len == 0) {
-		return false;
-	}
-
-	struct crsf_frame *src = queue->frames + queue->head;
-	*frame = *src;
-	queue->len -= 1;
-	queue->head = (queue->head + 1) % CRSF_FRAMESLEN_MAX;
-
-	return true;
 }
 
 bool crsf_parse_frame(struct crsf_frame *frame, const uint8_t *buf, uint8_t buf_len, uint8_t *read_len)
@@ -181,6 +138,7 @@ bool crsf_parse_frame(struct crsf_frame *frame, const uint8_t *buf, uint8_t buf_
 		*read_len = 1;
 		return false;
 	}
+	crsf_set_sync(frame, buf[0]);
 	if (buf[1] < 2) {
 		*read_len = 2;
 		return false;
@@ -204,40 +162,6 @@ bool crsf_parse_frame(struct crsf_frame *frame, const uint8_t *buf, uint8_t buf_
 	crsf_set_crc(frame, crc);
 
 	crsf_set_payload(frame, buf+CRSF_IDX_PAYLOAD);
-
-	return true;
-}
-
-void crsf_parse_frames(struct crsf_frame_queue *queue, const uint8_t *buf, uint8_t buf_len, uint8_t *read_len)
-{
-	assert(queue);
-	assert(buf);
-	assert(read_len);
-
-	struct crsf_frame frame;
-	uint8_t tmp_read_len;
-	uint8_t total_read_len;
-	bool is_parse_success;
-
-	for (total_read_len=0; total_read_len<buf_len; /*intentionally do nothing*/) {
-		is_parse_success = crsf_parse_frame(&frame, buf + total_read_len, buf_len - total_read_len, &tmp_read_len);
-
-		total_read_len += tmp_read_len;
-		if (is_parse_success) {
-			if (!crsf_push_frame_queue(queue, &frame)) {
-				break;
-			}
-		}
-	}
-	*read_len = total_read_len;
-}
-
-
-bool crsf_flush_frmae_queue(struct crsf_frame_queue *queue)
-{
-	assert(queue);
-
-	queue->len = 0;
 
 	return true;
 }

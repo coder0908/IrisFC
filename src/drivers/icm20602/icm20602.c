@@ -1,5 +1,5 @@
 /*
- * servo.c
+ * icm20602.c
  *
  *  Created on: Jun 28, 2025
  *      Author: coder0908
@@ -7,23 +7,7 @@
 
 
 #include <assert.h>
-#include <math.h>
-#include "icm20602_driver.h"
-
-
-#define RADIAN (180/M_PI)
-
-static inline float DEG_TO_RAD(float degree)
-{
-	return degree / RADIAN;
-}
-
-static inline float RAD_TO_DEG(float radian)
-{
-	return radian * RADIAN;
-}
-
-
+#include "icm20602.h"
 
 static void en_cs(struct icm20602 *imu)
 {
@@ -103,24 +87,23 @@ static bool icm20602_write_spi(struct icm20602 *imu, uint8_t reg, const uint8_t 
 	return icm20602_write_spi(imu, reg, &buf, 1);
 }
 
-bool icm20602_init(struct icm20602 *imu, SPI_HandleTypeDef *hspi, GPIO_TypeDef *cs_port, uint16_t cs_pin, GPIO_TypeDef *ready_port, uint16_t ready_pin, float degree_per_lsb, float g_per_lsb, float compfilter_alpha)
+bool icm20602_init(struct icm20602 *imu, SPI_HandleTypeDef *hspi, GPIO_TypeDef *cs_port, uint16_t cs_pin, GPIO_TypeDef *int_port, uint16_t int_pin, float degree_per_lsb, float g_per_lsb, float compfilter_alpha)
 {
 	assert(imu);
 	assert(hspi);
 	assert(cs_port);
-	assert(ready_port);
+	assert(int_port);
 
 	dis_cs(imu);
 
 	imu->hspi = hspi;
 	imu->cs_port = cs_port;
 	imu->cs_pin = cs_pin;
-	imu->ready_port = ready_port;
-	imu->ready_pin = ready_pin;
+	imu->int_port = int_port;
+	imu->int_pin = int_pin;
 
 	imu->degree_per_lsb = degree_per_lsb;
 	imu->g_per_lsb = g_per_lsb;
-	imu->compfilter_alpha = compfilter_alpha;
 
 	bool tmp = false;
 	uint8_t who_am_i = 0;
@@ -210,8 +193,6 @@ bool icm20602_get_accel_lsb(struct icm20602 *imu, int16_t *x_accel_lsb, int16_t 
 	assert(y_accel_lsb);
 	assert(z_accel_lsb);
 
-
-
 	bool ret;
 	uint8_t data[6] ={0,};
 
@@ -227,16 +208,31 @@ bool icm20602_get_accel_lsb(struct icm20602 *imu, int16_t *x_accel_lsb, int16_t 
 	return ret;
 }
 
+// gpio input
+//bool icm20602_is_data_ready(struct icm20602 *imu)
+//{
+//	assert(imu);
+//
+//	GPIO_PinState gpio_state = HAL_GPIO_ReadPin(imu->int_port, imu->int_pin);
+//	if (gpio_state == GPIO_PIN_RESET) {
+//		return false;
+//	}
+//
+//	return true;
+//}
+
 bool icm20602_is_data_ready(struct icm20602 *imu)
 {
-	assert(imu);
+	bool ret = imu->is_data_ready = true;
+	imu->is_data_ready = false;
+	return ret;
+}
 
-	GPIO_PinState gpio_state = HAL_GPIO_ReadPin(imu->ready_port, imu->ready_pin);
-	if (gpio_state == GPIO_PIN_RESET) {
-		return false;
-	}
 
-	return true;
+// exti
+void icm20602_irq_handler(struct icm20602 *imu)
+{
+	imu->is_data_ready = true;
 }
 
 bool icm20602_remove_gyro_bias_lsb(struct icm20602 *imu, int16_t x_bias_lsb, int16_t y_bias_lsb, int16_t z_bias_lsb)
@@ -356,102 +352,6 @@ bool icm20602_parse_accel(const struct icm20602 *imu, int16_t x_accel_lsb, int16
 
 	return true;
 }
-
-bool icm20602_calc_angle_compfilter(struct icm20602 *imu, int16_t x_accel_lsb, int16_t y_accel_lsb, int16_t z_accel_lsb, int16_t x_gyro_lsb, int16_t y_gyro_lsb, int16_t z_gyro_lsb)
-{
-	assert(imu);
-
-
-	float x_gyro_dps, y_gyro_dps, z_gyro_dps;
-	icm20602_parse_gyro(imu, x_gyro_lsb, y_gyro_lsb, z_gyro_lsb, &x_gyro_dps, &y_gyro_dps, &z_gyro_dps);
-	float x_accel_g, y_accel_g, z_accel_g;
-	icm20602_parse_accel(imu, x_accel_lsb, y_accel_lsb, z_accel_lsb, &x_accel_g, &y_accel_g, &z_accel_g);
-
-	imu->x_gyro_dps = x_gyro_dps;
-	imu->y_gyro_dps = y_gyro_dps;
-	imu->z_gyro_dps = z_gyro_dps;
-
-
-	uint32_t current_time_ms = HAL_GetTick();
-	if (current_time_ms == imu->prev_time_ms) {
-		return false;
-	}
-	float dt_s = ((float)current_time_ms - (float)imu->prev_time_ms) / 1000.0f;
-
-	float add_x_angle_by_gyro_deg = x_gyro_dps * dt_s;	//현재 루프에서 추가된 각도
-	float add_y_angle_by_gyro_deg = y_gyro_dps * dt_s;	//현재 루프에서 추가된 각도
-	float add_z_angle_by_gyro_deg = z_gyro_dps * dt_s;	//현재 루프에서 추가된 각도
-
-
-	imu->x_angle_deg -= add_y_angle_by_gyro_deg * sinf(DEG_TO_RAD(add_z_angle_by_gyro_deg));
-	imu->y_angle_deg += add_x_angle_by_gyro_deg * sinf(DEG_TO_RAD(add_z_angle_by_gyro_deg));
-	imu->z_angle_deg += add_z_angle_by_gyro_deg;
-
-	imu->total_accel_vevtor = sqrt((x_accel_g*x_accel_g) + (y_accel_g*y_accel_g) + (z_accel_g* z_accel_g));
-
-	float x_angle_by_accel_deg = atan2f(y_accel_g, sqrtf(x_accel_g*x_accel_g + z_accel_g*z_accel_g)) * RADIAN;
-	float y_angle_by_accel_deg = atan2f(-x_accel_g, sqrtf(y_accel_g*y_accel_g + z_accel_g*z_accel_g)) * RADIAN;
-
-	float alpha = imu->compfilter_alpha;
-//	if (fabsf(imu->total_accel_vevtor) - 1 > 0.3) {
-//		alpha = imu->compfilter_alpha;
-//	} else {
-//		alpha = 0.96;
-//	}
-
-	imu->x_angle_deg = (1 - alpha) * x_angle_by_accel_deg + alpha * (imu->x_angle_deg + add_x_angle_by_gyro_deg);
-	imu->y_angle_deg = (1 - alpha) * y_angle_by_accel_deg + alpha * (imu->y_angle_deg + add_y_angle_by_gyro_deg);
-
-	if (imu->x_angle_deg >= 180) {
-		imu->x_angle_deg -= 360;
-	} else if (imu->x_angle_deg < -180) {
-		imu->x_angle_deg += 360;
-	}
-
-	if (imu->y_angle_deg >= 180) {
-		imu->y_angle_deg -= 360;
-	} else if (imu->y_angle_deg < -180) {
-		imu->y_angle_deg += 360;
-	}
-
-	if (imu->z_angle_deg >= 180) {
-		imu->z_angle_deg -= 360;
-	} else if (imu->z_angle_deg < -180) {
-		imu->z_angle_deg += 360;
-	}
-
-	imu->prev_time_ms = HAL_GetTick();
-
-	return true;
-}
-
-//
-//
-//bool icm20602_calc_angle(struct icm20602 *imu, int16_t x_gyro_lsb, int16_t y_gyro_lsb, int16_t z_gyro_lsb)
-//{
-//	assert(imu);
-//
-//	float x_gyro_dps, y_gyro_dps, z_gyro_dps;
-//	icm20602_parse_gyro(imu, x_gyro_lsb, y_gyro_lsb, z_gyro_lsb, &x_gyro_dps, &y_gyro_dps, &z_gyro_dps);
-//
-//	float dt_s = (HAL_GetTick() - imu->prev_time_ms) / 1000.0;
-//
-//
-//	float add_x_angle_by_gyro_deg = x_gyro_dps / imu->frequency;	//현재 루프에서 추가된 각도
-//	float add_y_angle_by_gyro_deg = y_gyro_dps / imu->frequency;	//현재 루프에서 추가된 각도
-//	float add_z_angle_by_gyro_deg = z_gyro_dps / imu->frequency;	//현재 루프에서 추가된 각도
-//
-//	imu->x_angle_deg += add_x_angle_by_gyro_deg;
-//	imu->y_angle_deg += add_y_angle_by_gyro_deg;
-//	imu->z_angle_deg += add_z_angle_by_gyro_deg;
-//
-//	imu->x_angle_deg -= add_y_angle_by_gyro_deg * sinf(DEG_TO_RAD(add_z_angle_by_gyro_deg));
-//	imu->y_angle_deg += add_x_angle_by_gyro_deg * sinf(DEG_TO_RAD(add_z_angle_by_gyro_deg));
-//
-//	imu->prev_time_ms = HAL_GetTick();
-//
-//	return true;
-//}
 
 
 

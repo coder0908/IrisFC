@@ -18,7 +18,8 @@
 #define MSGBOX_ID_INVALID -1
 
 struct msgbox {
-	int id;
+//	uint32_t id;
+	bool using;
 	char name[MSGBOX_NAMELEN_MAX];
 	uint8_t name_len;
 
@@ -31,19 +32,17 @@ struct msgbox {
 static struct msgbox s_msgboxes[MSGBOX_CNT_MAX];
 static int s_msgboxes_len = 0;
 
-
-static int msgbox_hash(int hash, char val)
+static uint32_t msgbox_hash(uint32_t hash, char val)
 {
 	return (hash*31 + val) % MSGBOX_CNT_MAX;
 }
 
-static int msgbox_hash_name(const char msgbox_name[], uint8_t msgbox_name_len)
+static uint32_t msgbox_hash_name(const char msgbox_name[], uint8_t msgbox_name_len)
 {
-
 	assert(msgbox_name);
 	assert(msgbox_name_len <= MSGBOX_NAMELEN_MAX);
 
-	int msgbox_id = 0xD2;
+	uint32_t msgbox_id = 0xD2;
 	for (uint8_t i=0; i<msgbox_name_len; i++) {
 		msgbox_id = msgbox_hash(msgbox_id, msgbox_name[i]);
 	}
@@ -51,109 +50,144 @@ static int msgbox_hash_name(const char msgbox_name[], uint8_t msgbox_name_len)
 	return msgbox_id;
 }
 
-static struct msgbox* msgbox_find_addr(const char msgbox_name[], uint8_t msgbox_name_len)
-{
-	int msgbox_id = msgbox_hash_name(msgbox_name, msgbox_name_len);
-
-	struct msgbox *mb = NULL;
-	for (int i=0; i<MSGBOX_CNT_MAX; i++) {
-		mb = s_msgboxes + msgbox_id;
-		if (mb->id == msgbox_id ||
-			mb->name_len == msgbox_name_len ||
-			strncmp(msgbox_name, mb->name, msgbox_name_len) == 0) {
-			return s_msgboxes + msgbox_id;
-		}
-		msgbox_id = (msgbox_id+1) % MSGBOX_CNT_MAX;
-	}
-	return NULL;
-}
-
-static int msgbox_alloc_id(const char msgbox_name[], uint8_t msgbox_name_len)
+static bool msgbox_find_id(const char msgbox_name[], uint8_t msgbox_name_len, uint32_t *msgbox_id)
 {
 	assert(msgbox_name);
 	assert(msgbox_name_len <= MSGBOX_NAMELEN_MAX);
-
-	if (s_msgboxes_len == MSGBOX_CNT_MAX) {
-		return MSGBOX_ID_INVALID;
-	}
-
-	int msgbox_id = msgbox_hash_name(msgbox_name, msgbox_name_len);
-
-	for (int i=0; i<MSGBOX_CNT_MAX; i++) {
-		if (s_msgboxes[msgbox_id].id == MSGBOX_ID_INVALID) {
-			return msgbox_id;
-		}
-		msgbox_id = (msgbox_id+1) % MSGBOX_CNT_MAX;
-	}
-	return MSGBOX_ID_INVALID;
-
-}
-
-static void msgbox_free_id(int msgbox_id)
-{
-	assert(msgbox_id >= 0);
-	assert(msgbox_id < MSGBOX_CNT_MAX);
-
-	struct msgbox *mb = s_msgboxes + msgbox_id;
-	if (mb->id != msgbox_id) {
-		return;
-	}
-	mb->id = MSGBOX_ID_INVALID;
-}
-
-bool msgbox_create(const char msgbox_name[], uint8_t msgbox_name_len, uint32_t *msgbox_id)
-{
-	assert(msgbox_name_len<=MSGBOX_NAMELEN_MAX);
 	assert(msgbox_id);
 
-	*msgbox_id = msgbox_alloc_id(msgbox_name, msgbox_name_len);
-	if (*msgbox_id == MSGBOX_ID_INVALID) {
+	if (s_msgboxes_len == 0) {
 		return false;
 	}
 
-	struct msgbox *mb = s_msgboxes + *msgbox_id;
+	int tmp_msgbox_id = msgbox_hash_name(msgbox_name, msgbox_name_len);
 
-	mb->id = *msgbox_id;
-	s_msgboxes_len += 1;
+	struct msgbox *mb = NULL;
+	for (uint32_t i=0; i<MSGBOX_CNT_MAX; i++) {
+		mb = &s_msgboxes[tmp_msgbox_id];
+		if (mb->using &&
+			mb->name_len == msgbox_name_len &&
+			strncmp(msgbox_name, mb->name, msgbox_name_len) == 0) {
+			*msgbox_id = tmp_msgbox_id;
+			return true;
+		}
+		tmp_msgbox_id = (tmp_msgbox_id+1) % MSGBOX_CNT_MAX;
+	}
+	return false;
+}
+
+static bool msgbox_find_new_id(const char msgbox_name[], uint8_t msgbox_name_len, uint32_t *msgbox_id)
+{
+
+	assert(msgbox_id);
+
+	if (s_msgboxes_len == MSGBOX_CNT_MAX) {
+		return false;
+	}
+
+	int tmp_msgbox_id = msgbox_hash_name(msgbox_name, msgbox_name_len);
+
+	for (uint32_t i=0; i<MSGBOX_CNT_MAX; i++) {
+		if (!s_msgboxes[tmp_msgbox_id].using) {
+			*msgbox_id = tmp_msgbox_id;
+			return true;
+		}
+		tmp_msgbox_id = (tmp_msgbox_id+1) % MSGBOX_CNT_MAX;
+	}
+	return false;
+
+}
+
+static bool msgbox_create(const char msgbox_name[], uint8_t msgbox_name_len, uint32_t *msgbox_id)
+{
+	assert(msgbox_name);
+	assert(msgbox_name_len<=MSGBOX_NAMELEN_MAX);
+	assert(msgbox_id);
+
+	if (!msgbox_find_new_id(msgbox_name, msgbox_name_len, msgbox_id)) {
+		return false;
+	}
+	struct msgbox *mb = &s_msgboxes[*msgbox_id];
+
 	strcpy_n(mb->name, msgbox_name, msgbox_name_len);
 	mb->name_len = msgbox_name_len;
 	mb->subs_cnt = 0;
+	mb->using = true;
+	for (uint8_t i=0; i<MSGBOX_SUBCNT_MAX; i++) {
+		mb->callbacks[i] = NULL;
+	}
+	s_msgboxes_len += 1;
 
 	return true;
 }
 
-void msgbox_destroy(int msgbox_id)
+static void msgbox_destroy(int msgbox_id)
 {
-	struct msgbox *mb = s_msgboxes + msgbox_id;
-	for (uint8_t i=0; i<mb->subs_cnt; i++) {
+	assert(msgbox_id < MSGBOX_CNT_MAX);
+
+	struct msgbox *mb = &s_msgboxes[msgbox_id];
+	assert(mb->using);
+
+
+	for (uint8_t i=0; i<MSGBOX_SUBCNT_MAX; i++) {
 		mb->callbacks[i] = NULL;
 	}
-	mb->subs_cnt = 0;
 
-	char dumy_name[MSGBOX_NAMELEN_MAX] = {0,};
-	strcpy_n(mb->name, dumy_name, mb->name_len);
+	mb->subs_cnt = 0;
 	mb->name_len = 0;
-	msgbox_free_id(msgbox_id);
+	mb->using = false;
+
+	s_msgboxes_len -= 1;
 }
 
-bool msgbox_publish(int msgbox_id, uint8_t msg[], uint8_t msg_len)
+bool msgbox_get(const char msgbox_name[], uint8_t msgbox_name_len, uint32_t *msgbox_id)
 {
-	msgbox_callback_fp *callbacks = s_msgboxes[msgbox_id].callbacks;
-	uint8_t subs_cnt = s_msgboxes[msgbox_id].subs_cnt;
+	if (msgbox_find_id(msgbox_name, msgbox_name_len, msgbox_id)) {
+		return true;
+	}
+	return msgbox_create(msgbox_name, msgbox_name_len, msgbox_id);
+}
 
-	for (uint8_t i=0; i<subs_cnt; i++) {
+void msgbox_release(uint32_t msgbox_id)
+{
+	msgbox_destroy(msgbox_id);
+}
+
+bool msgbox_publish(uint32_t msgbox_id, uint8_t msg[], uint8_t msg_len)
+{
+	assert(msgbox_id < MSGBOX_CNT_MAX);
+	assert(msg);
+
+	if (!msg_len) {
+		return true;
+	}
+
+	struct msgbox *mb = &s_msgboxes[msgbox_id];
+	if (!mb->using) {
+		return false;
+	}
+	if (mb->subs_cnt == 0) {
+		return true;
+	}
+
+	msgbox_callback_fp *callbacks = mb->callbacks;
+	for (uint8_t i=0; i<mb->subs_cnt; i++) {
 		callbacks[i](msg, msg_len);
 	}
 
 	return true;
 }
 
-bool msgbox_subscribe(char msgbox_name[], uint8_t msgbox_name_len, msgbox_callback_fp callback)
+bool msgbox_subscribe(uint32_t msgbox_id, msgbox_callback_fp callback)
 {
-	assert(msgbox_name);
+	assert(msgbox_id < MSGBOX_CNT_MAX);
 	assert(callback);
 
-	struct msgbox *mb = msgbox_find_addr(msgbox_name, msgbox_name_len);
+	struct msgbox *mb = &s_msgboxes[msgbox_id];
+
+	if (!mb->using) {
+		return false;
+	}
 
 	if (mb->subs_cnt == MSGBOX_SUBCNT_MAX) {
 		return false;
@@ -165,10 +199,37 @@ bool msgbox_subscribe(char msgbox_name[], uint8_t msgbox_name_len, msgbox_callba
 	return true;
 }
 
-void msgbox_dispath(int msgbox_id)
+bool msgbox_unsubscribe(uint32_t msgbox_id, msgbox_callback_fp callback)
 {
+	assert(msgbox_id < MSGBOX_CNT_MAX);
+	assert(callback);
+
+	struct msgbox *mb = &s_msgboxes[msgbox_id];
+	if (!mb->using) {
+		return false;
+	}
+
+	if (mb->subs_cnt == 0) {
+		return false;
+	}
+
+	for (uint8_t i=0; i<mb->subs_cnt; i++) {
+		if (mb->callbacks[i] != callback) {
+			continue;
+		}
+		mb->callbacks[i] = mb->callbacks[mb->subs_cnt-1];
+		mb->callbacks[mb->subs_cnt-1] = NULL;
+		mb->subs_cnt -= 1;
+
+		return true;
+	}
+
+	return false;
 
 }
+
+
+
 
 
 

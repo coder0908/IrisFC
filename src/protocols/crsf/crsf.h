@@ -5,8 +5,7 @@
  *      Author: coder0908
  */
 
-#ifndef __CRSF_H__
-#define __CRSF_H__
+#pragma once
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -18,9 +17,10 @@
 #define CRSF_LEN_CRC			1
 #define CRSF_LEN_METADATA 		(CRSF_LEN_SYNC+CRSF_LEN_LEN+CRSF_LEN_TYPE+CRSF_LEN_CRC)
 
+#define CRSF_FRAMELEN_MAX		(CRSF_PLDLEN_MAX + CRSF_LEN_SYNC + CRSF_LEN_LEN)
+
 #define CRSF_VOLTAGESLEN_MAX		29
 #define CRSF_TEMPLEN_MAX		20
-#define CRSF_FRAMELEN_MAX		(CRSF_PLDLEN_MAX + CRSF_LEN_SYNC + CRSF_LEN_LEN)
 #define CRSF_SYNC_CHAR			0xc8
 
 //crsf payload length
@@ -44,9 +44,6 @@
 #define CRSF_IDX_PAYLOAD			3
 #define CRSF_IDX_CRC(len_field_value)	(len_field_value+1)
 
-//crsf driver settings
-#define CRSF_FRAMESLEN_MAX 7
-
 enum crsf_type {
 	CRSF_TYPE_GPS = 0x02,
 	CRSF_TYPE_GPS_TIME = 0x03,
@@ -64,12 +61,6 @@ enum crsf_type {
 
 struct crsf_frame {
 	uint8_t frame[CRSF_FRAMELEN_MAX];
-};
-
-struct crsf_frame_queue {
-	struct crsf_frame frames[CRSF_FRAMESLEN_MAX];
-	uint8_t head;
-	uint8_t len;
 };
 
 struct crsf_gps {
@@ -217,14 +208,9 @@ static inline uint8_t crsf_get_frame_length(const struct crsf_frame *frame)
 uint8_t crsf_calc_crc8_buf(const uint8_t *buf, uint8_t len);
 uint8_t crsf_calc_crc8_frame(const struct crsf_frame *frame);
 
-bool crsf_init_frame_queue(struct crsf_frame_queue *queue);
-bool crsf_push_frame_queue(struct crsf_frame_queue *queue, const struct crsf_frame *frame);
-bool crsf_pop_frame_queue(struct crsf_frame_queue *queue, struct crsf_frame *frame);
 
 bool crsf_parse_frame(struct crsf_frame *frame, const uint8_t *buf, uint8_t buf_len, uint8_t *read_len);
-void crsf_parse_frames(struct crsf_frame_queue *queue, const uint8_t *buf, uint8_t buf_len, uint8_t *read_len);
 
-bool crsf_flush_frmae_queue(struct crsf_frame_queue *queue);
 
 bool crsf_parse_gps(const struct crsf_frame *frame, struct crsf_gps *gps);
 bool crsf_parse_rc_channels(const struct crsf_frame *frame, struct crsf_rc_channels *rc_channels);
@@ -242,4 +228,3 @@ void crsf_framing_battery(struct crsf_frame *frame, int16_t voltage_10uv, int16_
 void crsf_framing_voltages(struct crsf_frame *frame, uint8_t voltage_src_id, uint16_t voltages_mv[], uint8_t voltages_len);
 void crsf_framing_temps(struct crsf_frame *frame, uint8_t temp_src_id, int16_t temps_ddeg[], uint8_t temps_len);
 
-#endif /* __CRSF_H__ */

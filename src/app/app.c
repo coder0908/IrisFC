@@ -2,13 +2,23 @@
  * app.c
  *
  *  Created on: May 5, 2025
- *      Author: mia00
+ *      Author: coder0908
  */
 
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include "stm32f4xx_hal.h"
+#include "platform/hal/platform_hal.h"
+#include "usart.h"
+
+#include "app/battery/battery.h"
+#include "app/consur/consur.h"
+#include "app/tranceiver/tranceiver.h"
+#include "app/imu/icm20602/icm20602.h"
+#include "app/attitude/attitude.h"
+
 #include "app.h"
 
 #define TTTT (10000.0)
@@ -39,15 +49,20 @@ bool setup()
 //		return false;
 //	}
 
+	ret = trcivr_init();
+	if (!ret) {
+		return false;
+	}
+
 	ret = consur_init();
 	if (!ret) {
 		return false;
 	}
 
-	ret = imu_init();
-	if (!ret) {
-		return false;
-	}
+//	ret = imu_init();
+//	if (!ret) {
+//		return false;
+//	}
 
 	return ret;
 }
@@ -70,39 +85,16 @@ void loop(void)
 //
 //	}
 
-//	if (is_trcivr_data_ready) {
-//		if (crsf_parse_rc_channels(&g_trcivr_elrs, &g_rc_channels)) {
-//			if (g_rc_channels.chan8 == 191) {
-//				servo_write(&bldc_left_mot, g_rc_channels.chan1);
-//
-//			}
-//
-//			servo_write(&servo_rud, g_rc_channels.chan4);
-//			servo_write(&servo_lan, g_rc_channels.chan4);
-//			servo_write(&servo_ele, g_rc_channels.chan3);
-//			servo_write(&servo_left_ail, g_rc_channels.chan2);
-//			servo_write(&servo_right_ail, g_rc_channels.chan2);
-//
-//
-//		}
-//		crsf_flush_rx(&g_trcivr_elrs);
-//	}
-//
-//	if (battery_read_voltage(&g_batt, batts)) {
-//		crsf_send_battery(&g_trcivr_elrs, (int16_t)batts[0]*10, 0,0,0);
-//		crsf_send_battery(&g_trcivr_nrf24, (int16_t)batts[0]*10, 0,0,0);
-//		crsf_send_battery(&g_trcivr_nrf24, (int16_t)batts[1]*10, 0,0,0);
-//
-//	}
-
-	battery_read_voltage();
+	trcivr_loop();
+	consur_loop();
+	battery_loop();
 
 
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-
+	trcivr_uart_rx_cplt_callback(huart);
 }
 
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
