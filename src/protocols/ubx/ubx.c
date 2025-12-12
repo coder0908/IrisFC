@@ -188,13 +188,13 @@ bool ubx_parse_nav_posllh(const struct ubx_frame *frame, struct ubx_nav_posllh *
 
 	const uint8_t *payload = &(frame->frame[UBX_IDX_PAYLOAD]);
 
-	nav_posllh->tow_ms = buf_to_u32_little_endian(payload);
-	nav_posllh->longitude_100ndeg =  buf_to_u32_little_endian(payload+4);
-	nav_posllh->latitude_100ndeg =  buf_to_u32_little_endian(payload+8);
-	nav_posllh->alti_ellipsoid_mm =  buf_to_u32_little_endian(payload+12);
-	nav_posllh->alti_msl_mm = buf_to_u32_little_endian(payload+16);
-	nav_posllh->horizontal_accuracy_mm =  buf_to_u32_little_endian(payload+20);
-	nav_posllh->vertical_accuracy_mm =  buf_to_u32_little_endian(payload+24);
+	nav_posllh->tow_ms = *((uint32_t*)(payload));
+	nav_posllh->longitude_100ndeg =  *((int32_t*)(payload+4));
+	nav_posllh->latitude_100ndeg =  *((int32_t*)(payload+8));
+	nav_posllh->alti_ellipsoid_mm =  *((int32_t*)(payload+12));
+	nav_posllh->alti_msl_mm = *((int32_t*)(payload+16));
+	nav_posllh->horizontal_accuracy_mm =  *((uint32_t*)(payload+20));
+	nav_posllh->vertical_accuracy_mm =  *((uint32_t*)(payload+24));
 
 	return true;
 }
@@ -214,16 +214,16 @@ bool ubx_parse_nav_pvt(struct ubx_frame *frame, struct ubx_nav_pvt *nav_pvt)
 
 	const uint8_t *payload = &(frame->frame[UBX_IDX_PAYLOAD]);
 
-	nav_pvt->tow_ms = buf_to_u32_little_endian(payload);
-	nav_pvt->year = buf_to_u16_little_endian(payload+4);
+	nav_pvt->tow_ms = *((uint32_t*)(payload));
+	nav_pvt->year = *((uint16_t*)(payload+4));
 	nav_pvt->month = payload[6];
 	nav_pvt->day = payload[12];
 	nav_pvt->hour = payload[8];
 	nav_pvt->minuate = payload[9];
 	nav_pvt->second = payload[10];
 	nav_pvt->valid = payload[11];
-	nav_pvt->time_accuracy_ns = buf_to_u32_little_endian(payload+12);
-	nav_pvt->fraction_of_second_ns = buf_to_u32_little_endian(payload+16);
+	nav_pvt->time_accuracy_ns = *((uint32_t*)(payload+12));
+	nav_pvt->fraction_of_second_ns = *((int32_t*)(payload+16));
 	nav_pvt->gnss_fix_type = payload[20];
 	nav_pvt->flags = payload[21];
 	nav_pvt->flags2 = payload[22];
@@ -231,25 +231,25 @@ bool ubx_parse_nav_pvt(struct ubx_frame *frame, struct ubx_nav_pvt *nav_pvt)
 	nav_pvt->longitude_100ndeg = *((int32_t*)(payload+24));
 	nav_pvt->latitude_100ndeg = *((int32_t*)(payload+28));
 	nav_pvt->alti_ellipsoid_mm = *((int32_t*)(payload+32));
-	nav_pvt->alti_msl_mm = buf_to_u32_little_endian(payload+36);
-	nav_pvt->horizontal_accuracy_mm = buf_to_u32_little_endian(payload+40);
-	nav_pvt->vertical_accuracy_mm = buf_to_u32_little_endian(payload+44);
-	nav_pvt->northward_velocity_mmps = buf_to_u32_little_endian(payload+48);
-	nav_pvt->eastward_velocity_mmps = buf_to_u32_little_endian(payload+52);
-	nav_pvt->down_velocity_mmps = buf_to_u32_little_endian(payload+56);
+	nav_pvt->alti_msl_mm = *((int32_t*)(payload+36));
+	nav_pvt->horizontal_accuracy_mm = *((uint32_t*)(payload+40));
+	nav_pvt->vertical_accuracy_mm = *((uint32_t*)(payload+44));
+	nav_pvt->northward_velocity_mmps = *((int32_t*)(payload+48));
+	nav_pvt->eastward_velocity_mmps = *((int32_t*)(payload+52));
+	nav_pvt->down_velocity_mmps = *((int32_t*)(payload+56));
 	nav_pvt->groundspeed_mmps = *((int32_t*)(payload+60));
 	nav_pvt->heading_of_motion_10udeg = *((int32_t*)(payload+64));
-	nav_pvt->velocity_accuracy_mmps = buf_to_u32_little_endian(payload+68);
-	nav_pvt->heading_accuracy_10udeg = buf_to_u32_little_endian(payload+72);
-	nav_pvt->position_dop_centi = buf_to_u16_little_endian(payload+76);
-	nav_pvt->flags3 = buf_to_u16_little_endian(payload+78);
+	nav_pvt->velocity_accuracy_mmps = *((uint32_t*)(payload+68));
+	nav_pvt->heading_accuracy_10udeg = *((uint32_t*)(payload+72));
+	nav_pvt->position_dop_centi = *((uint16_t*)(payload+76));
+	nav_pvt->flags3 = *((uint16_t*)(payload+78));
 	nav_pvt->reserved1 = payload[80];
 	nav_pvt->reserved2 = payload[81];
 	nav_pvt->reserved3 = payload[82];
 	nav_pvt->reserved4 = payload[83];
-	nav_pvt->heading_of_vehicle_10udeg = buf_to_u32_little_endian(payload+84);
-	nav_pvt->magnetic_declination_cdeg = buf_to_u16_little_endian(payload+88);
-	nav_pvt->magnetic_declination_accuracy_cdeg = buf_to_u16_little_endian(payload+90);
+	nav_pvt->heading_of_vehicle_10udeg = *((int32_t*)(payload+84));
+	nav_pvt->magnetic_declination_cdeg = *((int16_t*)(payload+88));
+	nav_pvt->magnetic_declination_accuracy_cdeg = *((uint16_t*)(payload+90));
 
 	return true;
 }

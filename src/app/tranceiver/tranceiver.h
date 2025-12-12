@@ -10,10 +10,10 @@
 #include <stdbool.h>
 
 
-#define TRCEIVER_MSGBOX_NAME_RX_CRSF	"rx_crsf"
-#define TRCEIVER_MSGBOX_NAMELEN_RX_CRSF	7
-#define TRCEIVER_MSGBOX_NAME_TX_CRSF	"tx_crsf"
-#define TRCEIVER_MSGBOX_NAMELEN_TX_CRSF	7
+#define TRCIVR_MSGBOX_NAME_CRSF_RX	"rx_crsf"
+#define TRCIVR_MSGBOX_NAMELEN_CRSF_RX	7
+#define TRCIVR_MSGBOX_NAME_CRSF_TX	"tx_crsf"
+#define TRCIVR_MSGBOX_NAMELEN_CRSF_TX	7
 
 bool trcivr_init();
 void trcivr_loop();

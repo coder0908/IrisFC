@@ -14,28 +14,28 @@
 #include "battery.h"
 
 #define ADC1_FULLSCALE				(4095.0f)
-#define BATTERY_VOLTAGESCALE_ADC1CH4		((47.0f+10.0f)/10.0f)
-#define BATTERY_VOLTAGESCALE_ADC1CH7		((47.0f+10.0f)/10.0f)
-#define BATTERY_CHANNELCNT_ADC1			2
+#define ADC1_VOLTAGESCALE_CH4		((47.0f+10.0f)/10.0f)
+#define ADC1_VOLTAGESCALE_CH7		((47.0f+10.0f)/10.0f)
+#define ADC1_CNT_CHANNEL			2
 
-static uint32_t s_trcivr_tx_crsf_msgbox_id;
+static uint32_t s_crsf_tx_msgbox_id;
 
-static uint32_t s_adc1_values_lsb[BATTERY_CHANNELCNT_ADC1 + 1];	// last one's for vrefint
+static uint32_t s_adc1_values_lsb[ADC1_CNT_CHANNEL + 1];	// last one's for vrefint
 
-static float s_battery_adc1_voltages_v[BATTERY_CHANNELCNT_ADC1];
+static float s_adc1_voltages_v[ADC1_CNT_CHANNEL];
 
 bool battery_init()
 {
-	bool tmp = false;
+	bool ret = false;
 	HAL_StatusTypeDef status = HAL_ERROR;
 
-	status = HAL_ADC_Start_DMA(&hadc1, s_adc1_values_lsb, BATTERY_CHANNELCNT_ADC1+1);	//+1 for vrefint channel
+	status = HAL_ADC_Start_DMA(&hadc1, s_adc1_values_lsb, ADC1_CNT_CHANNEL+1);	//+1 for vrefint channel
 	if (status != HAL_OK) {
 		return false;
 	}
 
-	tmp = msgbox_get(TRCEIVER_MSGBOX_NAME_TX_CRSF, TRCEIVER_MSGBOX_NAMELEN_TX_CRSF, &s_trcivr_tx_crsf_msgbox_id);
-	if (!tmp) {
+	ret = msgbox_get(TRCIVR_MSGBOX_NAME_CRSF_TX, TRCIVR_MSGBOX_NAMELEN_CRSF_TX, &s_crsf_tx_msgbox_id);
+	if (!ret) {
 		return false;
 	}
 
@@ -45,10 +45,10 @@ bool battery_init()
 
 static void battery_read_voltage()
 {
-	float vrefplus_mv = (float)VREFINT_CAL_VREF * (float)(*VREFINT_CAL_ADDR) / (float)s_adc1_values_lsb[BATTERY_CHANNELCNT_ADC1];	// battery_adc1_values[BATTERY_CHANNELCNT_ADC1] = vrefint data
+	float vrefplus_mv = (float)VREFINT_CAL_VREF * (float)(*VREFINT_CAL_ADDR) / (float)s_adc1_values_lsb[ADC1_CNT_CHANNEL];	// battery_adc1_values[ADC1_CNT_CHANNEL] = vrefint data
 
-	s_battery_adc1_voltages_v[0] = ((float)s_adc1_values_lsb[0]/ADC1_FULLSCALE) * (vrefplus_mv/1000.0f) * BATTERY_VOLTAGESCALE_ADC1CH4;
-	s_battery_adc1_voltages_v[1] = ((float)s_adc1_values_lsb[1]/ADC1_FULLSCALE) * (vrefplus_mv/1000.0f) * BATTERY_VOLTAGESCALE_ADC1CH7;
+	s_adc1_voltages_v[0] = ((float)s_adc1_values_lsb[0]/ADC1_FULLSCALE) * (vrefplus_mv/1000.0f) * ADC1_VOLTAGESCALE_CH4;
+	s_adc1_voltages_v[1] = ((float)s_adc1_values_lsb[1]/ADC1_FULLSCALE) * (vrefplus_mv/1000.0f) * ADC1_VOLTAGESCALE_CH7;
 
 }
 
@@ -57,9 +57,9 @@ void battery_loop()
 	battery_read_voltage();
 	struct crsf_frame frame = {0,};
 
-	crsf_framing_battery(&frame, (int16_t)(s_battery_adc1_voltages_v[0]*10.0f), (int16_t)(s_battery_adc1_voltages_v[1]*10.0f), 0, 0);
+	crsf_framing_battery(&frame, (int16_t)(s_adc1_voltages_v[0]*10.0f), (int16_t)(s_adc1_voltages_v[1]*10.0f), 0, 0);
 	uint8_t len = crsf_get_frame_length(&frame);
-	assert(msgbox_publish(s_trcivr_tx_crsf_msgbox_id, frame.frame, len));
+	assert(msgbox_publish(s_crsf_tx_msgbox_id, frame.frame, len));
 }
 
 

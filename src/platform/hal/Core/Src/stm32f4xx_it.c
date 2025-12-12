@@ -20,6 +20,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32f4xx_it.h"
+#include "app/imu/icm20602/icm20602.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 /* USER CODE END Includes */
@@ -256,7 +257,7 @@ void EXTI15_10_IRQHandler(void)
   /* USER CODE END EXTI15_10_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(ICM20602_INT_Pin);
   /* USER CODE BEGIN EXTI15_10_IRQn 1 */
-
+  app_icm20602_irq_handler();
   /* USER CODE END EXTI15_10_IRQn 1 */
 }
 

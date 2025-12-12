@@ -85,6 +85,7 @@ void crsf_parse_frames(struct crsf_frame_queue *queue, const uint8_t *buf, uint8
 			}
 		}
 	}
+
 	*read_len = total_read_len;
 }
 

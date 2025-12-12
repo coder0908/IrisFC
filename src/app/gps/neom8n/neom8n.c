@@ -16,10 +16,10 @@
 #define NEOM8N_LEN_RXBUF 150
 
 static UART_HandleTypeDef * const s_neom8n_huart = &huart6;
-static uint8_t s_neom8n_uart_buf[NEOM8N_LEN_RXBUF];
+static uint8_t s_uart_rx_buf[NEOM8N_LEN_RXBUF];
 
-static uint32_t s_trcivr_tx_crsf_msgbox_id;
-static bool s_neom8n_is_rx_buf_full = false;
+static uint32_t s_crsf_tx_msgbox_id;
+static bool s_is_uart_rx_buf_full = false;
 
 static struct ubx_frame_queue s_neom8n_ubx_frame_queue;
 static struct crsf_frame_queue s_neom8n_crsf_frame_queue;
@@ -39,12 +39,12 @@ bool neom8n_init()
 		return false;
 	}
 
-	tmp = msgbox_get(TRCEIVER_MSGBOX_NAME_TX_CRSF, TRCEIVER_MSGBOX_NAMELEN_TX_CRSF, &s_trcivr_tx_crsf_msgbox_id);
+	tmp = msgbox_get(TRCIVR_MSGBOX_NAME_CRSF_TX, TRCIVR_MSGBOX_NAMELEN_CRSF_TX, &s_crsf_tx_msgbox_id);
 	if (!tmp) {
 		return false;
 	}
 
-	status = HAL_UART_Receive_DMA(s_neom8n_huart, s_neom8n_uart_buf, NEOM8N_LEN_RXBUF);
+	status = HAL_UART_Receive_DMA(s_neom8n_huart, s_uart_rx_buf, NEOM8N_LEN_RXBUF);
 	if (status != HAL_OK) {
 		return false;
 	}
@@ -55,16 +55,16 @@ bool neom8n_init()
 
 void neom8n_flush_rx()
 {
-	if (!s_neom8n_is_rx_buf_full) {
+	if (!s_is_uart_rx_buf_full) {
 		return;
 	}
-	s_neom8n_is_rx_buf_full = false;
+	s_is_uart_rx_buf_full = false;
 
 	struct ubx_frame ubx_frame = {0,};
 	struct ubx_nav_pvt nav_pvt_frame = {0,};
 	struct crsf_frame crsf_frame = {0,};
 	uint16_t read_len = 0;
-	ubx_parse_frames(&s_neom8n_ubx_frame_queue, s_neom8n_uart_buf, NEOM8N_LEN_RXBUF, &read_len);
+	ubx_parse_frames(&s_neom8n_ubx_frame_queue, s_uart_rx_buf, NEOM8N_LEN_RXBUF, &read_len);
 
 	bool tmp = false;
 	while (true) {
@@ -80,11 +80,11 @@ void neom8n_flush_rx()
 
 		crsf_framing_gps(&crsf_frame, nav_pvt_frame.latitude_100ndeg, nav_pvt_frame.longitude_100ndeg, (nav_pvt_frame.groundspeed_mmps)/10000, (nav_pvt_frame.heading_of_motion_10udeg)/1000, (nav_pvt_frame.alti_ellipsoid_mm)/1000, nav_pvt_frame.satellite);
 
-		tmp = msgbox_publish(s_trcivr_tx_crsf_msgbox_id, crsf_frame.frame, crsf_get_frame_length(&crsf_frame));
+		tmp = msgbox_publish(s_crsf_tx_msgbox_id, crsf_frame.frame, crsf_get_frame_length(&crsf_frame));
 		assert(tmp);
 	}
 
-	if (HAL_UART_Receive_DMA(s_neom8n_huart, s_neom8n_uart_buf, NEOM8N_LEN_RXBUF) != HAL_OK) {
+	if (HAL_UART_Receive_DMA(s_neom8n_huart, s_uart_rx_buf, NEOM8N_LEN_RXBUF) != HAL_OK) {
 		assert(false);
 	}
 }
@@ -102,7 +102,7 @@ void neom8n_loop()
 void neom8n_uart_rx_cplt_callback(UART_HandleTypeDef *huart)
 {
 	if (huart->Instance == s_neom8n_huart->Instance) {
-		s_neom8n_is_rx_buf_full = true;
+		s_is_uart_rx_buf_full = true;
 	}
 
 }

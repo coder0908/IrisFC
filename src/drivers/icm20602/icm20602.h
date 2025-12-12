@@ -118,8 +118,8 @@ bool icm20602_remove_accel_bias_lsb(struct icm20602 *imu, int16_t x_bias_lsb, in
 bool icm20602_calibrate_gyro(struct icm20602 *imu);
 bool icm20602_calibrate_accel(struct icm20602 *imu);
 
-bool icm20602_parse_gyro(const struct icm20602 *imu, int16_t x_gyro_lsb, int16_t y_gyro_lsb, int16_t z_gyro_lsb, float *x_gyro_dps, float *y_gyro_dps, float *z_gyro_dps);
-bool icm20602_parse_accel(const struct icm20602 *imu, int16_t x_accel_lsb, int16_t y_accel_lsb, int16_t z_accel_lsb, float *x_accel_g, float *y_accel_g, float *z_accel_g);
+void icm20602_parse_gyro(const struct icm20602 *imu, int16_t x_gyro_lsb, int16_t y_gyro_lsb, int16_t z_gyro_lsb, float *x_gyro_dps, float *y_gyro_dps, float *z_gyro_dps);
+void icm20602_parse_accel(const struct icm20602 *imu, int16_t x_accel_lsb, int16_t y_accel_lsb, int16_t z_accel_lsb, float *x_accel_g, float *y_accel_g, float *z_accel_g);
 
 
 

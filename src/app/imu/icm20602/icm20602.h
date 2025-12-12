@@ -1,5 +1,5 @@
 /*
- * imu.h
+ * icm20602.h
  *
  *  Created on: Jun 22, 2025
  *      Author: coder0908
@@ -12,7 +12,6 @@
 
 
 
-bool imu_init();
-
-
-
+bool app_icm20602_init();
+void app_icm20602_loop();
+void app_icm20602_irq_handler();

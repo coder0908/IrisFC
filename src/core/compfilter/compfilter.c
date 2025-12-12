@@ -11,7 +11,7 @@
 #include "compfilter.h"
 #include "utils/utils.h"
 
-bool icm20602_calc_angle_compfilter(struct compfilter *cmpf, int32_t x_accel_g, int32_t y_accel_g, int32_t z_accel_g, int32_t x_gyro_dps, int32_t y_gyro_dps, int32_t z_gyro_dps)
+bool compfilter_calc_angle(struct compfilter *cmpf, float x_accel_g, float y_accel_g, float z_accel_g, float x_gyro_dps, float y_gyro_dps, float z_gyro_dps)
 {
 	assert(cmpf);
 

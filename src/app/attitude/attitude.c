@@ -11,23 +11,28 @@
 #include "core/pid/pid.h"
 #include "attitude.h"
 
-struct cascade_pid g_roll_cpid;
-struct cascade_pid g_pitch_cpid;
+static struct cascade_pid s_roll_cpid;
+static struct cascade_pid s_pitch_cpid;
 
 
 
 bool attitude_init()
 {
-	bool tmp;
-	tmp = cascade_pid_init(&g_roll_cpid, 6, 0.00005, 0.0005, 0, -30, 30, 0.7, 0.00005, 0.0001, 0, -30, 30);
-	if (!tmp) {
+	bool ret = false;
+	ret = cascade_pid_init(&s_roll_cpid, 6, 0.00005, 0.0005, 0, -30, 30, 0.7, 0.00005, 0.0001, 0, -30, 30);
+	if (!ret) {
 		return false;
 	}
-	tmp = cascade_pid_init(&g_pitch_cpid, 6, 0.00005, 0.0005, 0, -30, 30, 0.7, 0.00005, 0.0001, 0, -30, 30);
-	if (!tmp) {
+	ret = cascade_pid_init(&s_pitch_cpid, 6, 0.00005, 0.0005, 0, -30, 30, 0.7, 0.00005, 0.0001, 0, -30, 30);
+	if (!ret) {
 		return false;
 	}
 
 	return true;
+
+}
+
+void attitude_loop()
+{
 
 }

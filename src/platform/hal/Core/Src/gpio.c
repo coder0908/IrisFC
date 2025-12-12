@@ -54,10 +54,10 @@ void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(BNO08X_NRST_GPIO_Port, BNO08X_NRST_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOA, BNO08X_WAKE_Pin|BNO08X_CS_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, BNO08X_CS_Pin|ICM20602_CS_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOB, BNO08X_NRST_Pin|ICM20602_CS_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin : DEBUG_LED_Pin */
   GPIO_InitStruct.Pin = DEBUG_LED_Pin;
@@ -66,12 +66,12 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(DEBUG_LED_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : BNO08X_NRST_Pin */
-  GPIO_InitStruct.Pin = BNO08X_NRST_Pin;
+  /*Configure GPIO pins : BNO08X_WAKE_Pin BNO08X_CS_Pin */
+  GPIO_InitStruct.Pin = BNO08X_WAKE_Pin|BNO08X_CS_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-  HAL_GPIO_Init(BNO08X_NRST_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pin : BNO08X_INT_Pin */
   GPIO_InitStruct.Pin = BNO08X_INT_Pin;
@@ -79,8 +79,8 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(BNO08X_INT_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : BNO08X_CS_Pin ICM20602_CS_Pin */
-  GPIO_InitStruct.Pin = BNO08X_CS_Pin|ICM20602_CS_Pin;
+  /*Configure GPIO pins : BNO08X_NRST_Pin ICM20602_CS_Pin */
+  GPIO_InitStruct.Pin = BNO08X_NRST_Pin|ICM20602_CS_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;

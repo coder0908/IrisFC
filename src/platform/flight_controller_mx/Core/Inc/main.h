@@ -59,14 +59,16 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define DEBUG_LED_Pin GPIO_PIN_13
 #define DEBUG_LED_GPIO_Port GPIOC
+#define BNO08X_WAKE_Pin GPIO_PIN_1
+#define BNO08X_WAKE_GPIO_Port GPIOA
 #define RECEIVER_TX_Pin GPIO_PIN_2
 #define RECEIVER_TX_GPIO_Port GPIOA
 #define RECEIVER_RX_Pin GPIO_PIN_3
 #define RECEIVER_RX_GPIO_Port GPIOA
 #define EXBAT2_Pin GPIO_PIN_4
 #define EXBAT2_GPIO_Port GPIOA
-#define BNO08X_NRST_Pin GPIO_PIN_5
-#define BNO08X_NRST_GPIO_Port GPIOA
+#define BNO08X_CS_Pin GPIO_PIN_5
+#define BNO08X_CS_GPIO_Port GPIOA
 #define BNO08X_INT_Pin GPIO_PIN_6
 #define BNO08X_INT_GPIO_Port GPIOA
 #define BNO08X_INT_EXTI_IRQn EXTI9_5_IRQn
@@ -76,8 +78,8 @@ void Error_Handler(void);
 #define SERVO_FLAP_R_GPIO_Port GPIOB
 #define SERVO_AIL_L_Pin GPIO_PIN_1
 #define SERVO_AIL_L_GPIO_Port GPIOB
-#define BNO08X_CS_Pin GPIO_PIN_2
-#define BNO08X_CS_GPIO_Port GPIOB
+#define BNO08X_NRST_Pin GPIO_PIN_2
+#define BNO08X_NRST_GPIO_Port GPIOB
 #define ICM20602_INT_Pin GPIO_PIN_12
 #define ICM20602_INT_GPIO_Port GPIOB
 #define ICM20602_INT_EXTI_IRQn EXTI15_10_IRQn

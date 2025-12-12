@@ -24,3 +24,5 @@ struct compfilter {
 	float y_gyro_dps;
 	float z_gyro_dps;
 };
+
+bool compfilter_calc_angle(struct compfilter *cmpf, float x_accel_g, float y_accel_g, float z_accel_g, float x_gyro_dps, float y_gyro_dps, float z_gyro_dps);

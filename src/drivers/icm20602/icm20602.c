@@ -332,7 +332,7 @@ bool icm20602_calibrate_accel(struct icm20602 *imu)
 
 //	calculate
 
-bool icm20602_parse_gyro(const struct icm20602 *imu, int16_t x_gyro_lsb, int16_t y_gyro_lsb, int16_t z_gyro_lsb, float *x_gyro_dps, float *y_gyro_dps, float *z_gyro_dps)
+void icm20602_parse_gyro(const struct icm20602 *imu, int16_t x_gyro_lsb, int16_t y_gyro_lsb, int16_t z_gyro_lsb, float *x_gyro_dps, float *y_gyro_dps, float *z_gyro_dps)
 {
 	assert(imu);
 
@@ -341,16 +341,14 @@ bool icm20602_parse_gyro(const struct icm20602 *imu, int16_t x_gyro_lsb, int16_t
 	*y_gyro_dps = y_gyro_lsb * imu->degree_per_lsb;
 	*z_gyro_dps = z_gyro_lsb * imu->degree_per_lsb;
 
-	return true;
 }
 
-bool icm20602_parse_accel(const struct icm20602 *imu, int16_t x_accel_lsb, int16_t y_accel_lsb, int16_t z_accel_lsb, float *x_accel_g, float *y_accel_g, float *z_accel_g)
+void icm20602_parse_accel(const struct icm20602 *imu, int16_t x_accel_lsb, int16_t y_accel_lsb, int16_t z_accel_lsb, float *x_accel_g, float *y_accel_g, float *z_accel_g)
 {
 	*x_accel_g = x_accel_lsb * imu->g_per_lsb;
 	*y_accel_g = y_accel_lsb * imu->g_per_lsb;
 	*z_accel_g = z_accel_lsb * imu->g_per_lsb;
 
-	return true;
 }
 
 

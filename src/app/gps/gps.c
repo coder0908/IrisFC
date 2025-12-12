@@ -12,9 +12,9 @@
 
 bool gps_init()
 {
-	bool tmp = false;
-	tmp = neom8n_init();
-	if (!tmp) {
+	bool ret = false;
+	ret = neom8n_init();
+	if (!ret) {
 		return false;
 	}
 

@@ -7,14 +7,19 @@
 
 #include "platform/hal/platform_hal.h"
 #include "services/msgbox/msgbox.h"
-#include "app/tranceiver/rp3/rp3.h"
-#include "app/tranceiver/rtt24/rtt24.h"
+#include "rp3/rp3.h"
+#include "rtt24/rtt24.h"
 #include "tranceiver.h"
 
 
 bool trcivr_init()
 {
-	rp3_init();
+	bool ret = false;
+
+	ret = rp3_init();
+	if (!ret ) {
+		return false;
+	}
 
 	return true;
 }

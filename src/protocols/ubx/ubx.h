@@ -31,7 +31,6 @@
 #define	UBX_PLDLEN_NAV_POSLLH	28
 #define UBX_PLDLEN_NAV_PVT	92
 
-
 #define UBX_IDX_SYNC_A		0
 #define UBX_IDX_SYNC_B		1
 #define UBX_IDX_CLASS		2
