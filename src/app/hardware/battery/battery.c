@@ -26,16 +26,12 @@ static float s_adc1_voltages_v[ADC1_CNT_CHANNEL];
 
 bool battery_init()
 {
-	bool ret = false;
-	HAL_StatusTypeDef status = HAL_ERROR;
 
-	status = HAL_ADC_Start_DMA(&hadc1, s_adc1_values_lsb, ADC1_CNT_CHANNEL+1);	//+1 for vrefint channel
-	if (status != HAL_OK) {
+	if (HAL_ADC_Start_DMA(&hadc1, s_adc1_values_lsb, ADC1_CNT_CHANNEL+1) != HAL_OK) {
 		return false;
 	}
 
-	ret = msgbox_get(TRCIVR_MSGBOX_NAME_CRSF_TX, TRCIVR_MSGBOX_NAMELEN_CRSF_TX, &s_crsf_tx_msgbox_id);
-	if (!ret) {
+	if (!msgbox_get(TRCIVR_MSGBOX_NAME_CRSF_TX, TRCIVR_MSGBOX_NAMELEN_CRSF_TX, &s_crsf_tx_msgbox_id)) {
 		return false;
 	}
 
@@ -57,16 +53,17 @@ void battery_loop()
 	battery_read_voltage();
 	struct crsf_frame frame = {0,};
 
-	uint16_t fc_mv = (uint16_t)(s_adc1_voltages_v[0]*1000.0f);
-	uint16_t mot_mv = (uint16_t)(s_adc1_voltages_v[1]*1000.0f);
 
-	crsf_framing_voltages(&frame, 128, &fc_mv, 1);
+	uint16_t fc_mv = (uint16_t)(s_adc1_voltages_v[0]*1000.0f);
+	uint16_t esc_mv = (uint16_t)(s_adc1_voltages_v[1]*1000.0f);
+
+	uint16_t tmp[2] = {fc_mv, esc_mv};
+
+	crsf_framing_voltages(&frame, 128, tmp, 2);
 	uint8_t len = crsf_get_frame_length(&frame);
 	msgbox_publish(s_crsf_tx_msgbox_id, frame.frame, len);
 
-	crsf_framing_voltages(&frame, 129, &mot_mv, 1);
-	len = crsf_get_frame_length(&frame);
-	msgbox_publish(s_crsf_tx_msgbox_id, frame.frame, len);
+
 
 }
 

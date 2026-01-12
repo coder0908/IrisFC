@@ -1,7 +1,6 @@
 src/platform/hal/Core/Src/stm32f4xx_it.o: \
  ../src/platform/hal/Core/Src/stm32f4xx_it.c \
- C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/main.h \
- C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/platform_hal.h \
+ C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Core/Inc/main.h \
  C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Core/Inc/stm32f4xx_hal_conf.h \
  C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -38,8 +37,7 @@ src/platform/hal/Core/Src/stm32f4xx_it.o: \
  C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
  C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Core/Inc/stm32f4xx_it.h \
  C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/app/hardware/imu/icm20602/icm20602.h
-C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/main.h:
-C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/platform_hal.h:
+C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Core/Inc/main.h:
 C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Core/Inc/stm32f4xx_hal_conf.h:
 C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h:

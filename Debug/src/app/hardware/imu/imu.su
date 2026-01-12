@@ -1,2 +1,2 @@
-../src/app/hardware/imu/imu.c:12:6:imu_init	16	static
-../src/app/hardware/imu/imu.c:23:6:imu_loop	8	static
+../src/app/hardware/imu/imu.c:12:6:imu_init	8	static
+../src/app/hardware/imu/imu.c:21:6:imu_loop	8	static

@@ -36,8 +36,8 @@ src/app/hardware/imu/icm20602/icm20602.o: \
  C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
  C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Core/Inc/spi.h \
- C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/main.h \
- C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/drivers/icm20602/icm20602.h \
+ C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Core/Inc/main.h \
+ C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/drivers/icm20602/icm20602_driver.h \
  C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/lib/protocols/crsf/crsf.h \
  C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/middleware/msgbox/msgbox.h \
  C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/app/hardware/tranceiver/tranceiver.h \
@@ -80,8 +80,8 @@ C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/plat
 C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
 C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Core/Inc/spi.h:
-C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/main.h:
-C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/drivers/icm20602/icm20602.h:
+C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Core/Inc/main.h:
+C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/drivers/icm20602/icm20602_driver.h:
 C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/lib/protocols/crsf/crsf.h:
 C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/middleware/msgbox/msgbox.h:
 C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/app/hardware/tranceiver/tranceiver.h:

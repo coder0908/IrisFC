@@ -36,13 +36,15 @@ src/app/hardware/gnss/neom8n/neom8n.o: \
  C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
  C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Core/Inc/usart.h \
- C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/main.h \
+ C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Core/Inc/main.h \
+ C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Core/Inc/i2c.h \
  C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/lib/protocols/ubx/utils/ubx_frame_queue.h \
  C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/lib/protocols/ubx/utils/../ubx.h \
- C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/lib/protocols/crsf/utils/crsf_frame_queue.h \
- C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/lib/protocols/crsf/utils/../crsf.h \
+ C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/lib/protocols/crsf/crsf.h \
  C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/middleware/msgbox/msgbox.h \
  C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/app/hardware/tranceiver/tranceiver.h \
+ C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/drivers/hmc5883l_driver/hmc5883l_driver.h \
+ C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Core/Inc/main.h \
  ../src/app/hardware/gnss/neom8n/neom8n.h
 C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/platform_hal.h:
 C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
@@ -80,11 +82,13 @@ C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/plat
 C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
 C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Core/Inc/usart.h:
-C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/main.h:
+C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Core/Inc/main.h:
+C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Core/Inc/i2c.h:
 C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/lib/protocols/ubx/utils/ubx_frame_queue.h:
 C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/lib/protocols/ubx/utils/../ubx.h:
-C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/lib/protocols/crsf/utils/crsf_frame_queue.h:
-C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/lib/protocols/crsf/utils/../crsf.h:
+C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/lib/protocols/crsf/crsf.h:
 C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/middleware/msgbox/msgbox.h:
 C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/app/hardware/tranceiver/tranceiver.h:
+C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/drivers/hmc5883l_driver/hmc5883l_driver.h:
+C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Core/Inc/main.h:
 ../src/app/hardware/gnss/neom8n/neom8n.h:

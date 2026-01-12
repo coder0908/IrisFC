@@ -23,6 +23,7 @@ RM := rm -rf
 -include src/lib/subdir.mk
 -include src/drivers/servo/subdir.mk
 -include src/drivers/icm20602/subdir.mk
+-include src/drivers/hmc5883l_driver/subdir.mk
 -include src/app/modules/attitude/subdir.mk
 -include src/app/hardware/tranceiver/rtt24/subdir.mk
 -include src/app/hardware/tranceiver/rp3/subdir.mk
@@ -32,6 +33,7 @@ RM := rm -rf
 -include src/app/hardware/gnss/neom8n/subdir.mk
 -include src/app/hardware/gnss/subdir.mk
 -include src/app/hardware/consur/subdir.mk
+-include src/app/hardware/compass/subdir.mk
 -include src/app/hardware/battery/subdir.mk
 -include src/app/controller/subdir.mk
 -include src/app/subdir.mk

@@ -13,7 +13,7 @@
 
 bool crsf_init_frame_queue(struct crsf_frame_queue *queue)
 {
-	assert(queue);
+//	assert(queue);
 
 	queue->cnt = 0;
 	queue->head = 0;

@@ -1,6 +1,7 @@
-C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/lib/protocols/crsf/crsf.h:168:23:crsf_get_len	1
-C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/lib/protocols/crsf/crsf.h:206:23:crsf_get_frame_length	1
+C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/lib/protocols/crsf/crsf.h:184:23:crsf_get_len	1
+C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/lib/protocols/crsf/crsf.h:222:23:crsf_get_frame_length	1
 C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/lib/math.h:14:21:DEG_TO_RAD	1
-../src/app/hardware/imu/icm20602/icm20602.c:25:6:app_icm20602_init	10
-../src/app/hardware/imu/icm20602/icm20602.c:103:6:app_icm20602_loop	2
-../src/app/hardware/imu/icm20602/icm20602.c:121:6:app_icm20602_irq_handler	1
+../src/app/hardware/imu/icm20602/icm20602.c:25:7:map	1
+../src/app/hardware/imu/icm20602/icm20602.c:30:6:app_icm20602_init	10
+../src/app/hardware/imu/icm20602/icm20602.c:99:6:app_icm20602_loop	2
+../src/app/hardware/imu/icm20602/icm20602.c:131:6:app_icm20602_irq_handler	1

@@ -5,13 +5,13 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../src/drivers/icm20602/icm20602.c 
+../src/drivers/icm20602/icm20602_driver.c 
 
 OBJS += \
-./src/drivers/icm20602/icm20602.o 
+./src/drivers/icm20602/icm20602_driver.o 
 
 C_DEPS += \
-./src/drivers/icm20602/icm20602.d 
+./src/drivers/icm20602/icm20602_driver.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -21,7 +21,7 @@ src/drivers/icm20602/%.o src/drivers/icm20602/%.su src/drivers/icm20602/%.cyclo:
 clean: clean-src-2f-drivers-2f-icm20602
 
 clean-src-2f-drivers-2f-icm20602:
-	-$(RM) ./src/drivers/icm20602/icm20602.cyclo ./src/drivers/icm20602/icm20602.d ./src/drivers/icm20602/icm20602.o ./src/drivers/icm20602/icm20602.su
+	-$(RM) ./src/drivers/icm20602/icm20602_driver.cyclo ./src/drivers/icm20602/icm20602_driver.d ./src/drivers/icm20602/icm20602_driver.o ./src/drivers/icm20602/icm20602_driver.su
 
 .PHONY: clean-src-2f-drivers-2f-icm20602
 

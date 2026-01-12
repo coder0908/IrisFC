@@ -39,7 +39,7 @@ src/app/hardware/battery/battery.o: ../src/app/hardware/battery/battery.c \
  C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/lib/protocols/crsf/utils/../crsf.h \
  C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/app/hardware/tranceiver/tranceiver.h \
  C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Core/Inc/adc.h \
- C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/main.h \
+ C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Core/Inc/main.h \
  ../src/app/hardware/battery/battery.h
 C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/platform_hal.h:
 C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
@@ -81,5 +81,5 @@ C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/lib/
 C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/lib/protocols/crsf/utils/../crsf.h:
 C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/app/hardware/tranceiver/tranceiver.h:
 C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Core/Inc/adc.h:
-C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/main.h:
+C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/platform/hal/Core/Inc/main.h:
 ../src/app/hardware/battery/battery.h:

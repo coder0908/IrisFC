@@ -186,10 +186,10 @@ bool crsf_parse_gps(const struct crsf_frame* frame, struct crsf_gps* gps)
 	gps->longitude_100ndeg = buf_to_u32_little_endian(payload + 4);
 	gps->groundspeed_damph = buf_to_u16_little_endian(payload + 8);
 	gps->heading_cdeg = buf_to_u16_little_endian(payload + 10);
-	gps->alti_m = buf_to_u16_little_endian(payload + 12);
+	gps->alt_m = buf_to_u16_little_endian(payload + 12);
 	gps->satellites = payload[14];
 
-	gps->alti_m -= 1000;
+	gps->alt_m -= 1000;
 
 	return true;
 }
@@ -215,7 +215,7 @@ bool crsf_parse_gps_ex(const struct crsf_frame *frame, struct crsf_gps_ex* gps_e
 	gps_ex->vertical_velocity_cmps = buf_to_u16_little_endian(payload+5);
 	gps_ex->horizontal_velocity_accuracy_cmps = buf_to_u16_little_endian(payload+7);
 	gps_ex->track_accuracy_deg = buf_to_u16_little_endian(payload+9);
-	gps_ex->alti_ellipsoid_m = buf_to_u16_little_endian(payload+11);
+	gps_ex->alt_ellipsoid_m = buf_to_u16_little_endian(payload+11);
 	gps_ex->horizontal_accuracy_cm = buf_to_u16_little_endian(payload+13);
 	gps_ex->vertical_accuracy_cm = buf_to_u16_little_endian(payload+15);
 	gps_ex->reserved = payload[17];
@@ -314,6 +314,50 @@ bool crsf_parse_attitude(const struct crsf_frame* frame, struct crsf_attitude* a
 	return true;
 }
 
+bool crsf_parse_rate(const struct crsf_frame* frame, struct crsf_rate* rate)
+{
+	assert(frame);
+	assert(rate);
+
+	if (crsf_get_type(frame) != CRSF_TYPE_RATE) {
+		return false;
+	}
+
+	if (crsf_get_payload_length(frame) != CRSF_PLDLEN_RATE) {
+		return false;
+	}
+
+	const uint8_t* const payload = frame->frame + CRSF_IDX_PAYLOAD;
+
+	rate->pitch_rate_ddegps= buf_to_u16_little_endian(payload);
+	rate->roll_rate_ddegps= buf_to_u16_little_endian(payload + 2);
+	rate->yaw_rate_ddegps = buf_to_u16_little_endian(payload + 4);
+
+	return true;
+}
+
+bool crsf_parse_accel(const struct crsf_frame* frame, struct crsf_accel* accel)
+{
+	assert(frame);
+	assert(accel);
+
+	if (crsf_get_type(frame) != CRSF_TYPE_ACCEL) {
+		return false;
+	}
+
+	if (crsf_get_payload_length(frame) != CRSF_PLDLEN_ACCEL) {
+		return false;
+	}
+
+	const uint8_t* const payload = frame->frame + CRSF_IDX_PAYLOAD;
+
+	accel->lateral_accel_mg = buf_to_u16_little_endian(payload);
+	accel->longitudinal_accel_mg = buf_to_u16_little_endian(payload + 2);
+	accel->vertical_accel_mg = buf_to_u16_little_endian(payload + 4);
+
+	return true;
+}
+
 bool crsf_parse_voltages(const struct crsf_frame* frame, struct crsf_voltages* voltages)
 {
 	assert(frame);
@@ -359,7 +403,7 @@ bool crsf_parse_temps(const struct crsf_frame* frame, struct crsf_temps* temps)
 
 
 void crsf_framing_gps(struct crsf_frame* frame, int32_t latitude_100ndeg, int32_t longitude_100ndeg,
-		uint16_t groundspeed_damph, uint16_t heading_cdeg, uint16_t altitude_m, uint8_t satellites)
+		uint16_t groundspeed_damph, uint16_t heading_cdeg, uint16_t alttude_m, uint8_t satellites)
 {
 	assert(frame);
 
@@ -373,14 +417,14 @@ void crsf_framing_gps(struct crsf_frame* frame, int32_t latitude_100ndeg, int32_
 	u32_to_buf_big_endian(payload + 4, longitude_100ndeg);
 	u16_to_buf_big_endian(payload + 8, groundspeed_damph);
 	u16_to_buf_big_endian(payload + 10, heading_cdeg);
-	u16_to_buf_big_endian(payload + 12, altitude_m + 1000);
+	u16_to_buf_big_endian(payload + 12, alttude_m + 1000);
 	payload[14] = satellites;
 
 	crsf_set_crc(frame, crsf_calc_crc8_frame(frame));
 }
 
 void crsf_framing_gps_ex(struct crsf_frame* frame, uint8_t fix_type, int16_t northward_velocity_cmps, int16_t eastward_velocity_cmps,
-		int16_t vertical_velocity_cmps, int16_t horizontal_velocity_accuracy_cmps, int16_t track_accuracy_deg, int16_t alti_ellipsoid_m,
+		int16_t vertical_velocity_cmps, int16_t horizontal_velocity_accuracy_cmps, int16_t track_accuracy_deg, int16_t alt_ellipsoid_m,
 		int16_t horizontal_accuracy_cm, int16_t vertical_accuracy_cm, uint8_t horizontal_dop_deci, uint8_t vertical_dop_deci)
 {
 	assert(frame);
@@ -397,7 +441,7 @@ void crsf_framing_gps_ex(struct crsf_frame* frame, uint8_t fix_type, int16_t nor
 	u16_to_buf_big_endian(payload + 5, vertical_velocity_cmps);
 	u16_to_buf_big_endian(payload + 7, horizontal_velocity_accuracy_cmps);
 	u16_to_buf_big_endian(payload + 9, track_accuracy_deg);
-	u16_to_buf_big_endian(payload + 11, alti_ellipsoid_m);
+	u16_to_buf_big_endian(payload + 11, alt_ellipsoid_m);
 	u16_to_buf_big_endian(payload + 13, horizontal_accuracy_cm);
 	u16_to_buf_big_endian(payload + 15, vertical_accuracy_cm);
 	payload[17] = 0;
@@ -538,7 +582,41 @@ void crsf_framing_temps(struct crsf_frame* frame, uint8_t temp_src_id, int16_t t
 	crsf_set_crc(frame, crsf_calc_crc8_frame(frame));
 }
 
+void crsf_framing_rate(struct crsf_frame* frame, int16_t pitch_rate_dgegps, int16_t roll_rate_ddegps, int16_t yaw_rate_ddegps)
+{
+	assert(frame);
 
+	crsf_set_sync(frame, CRSF_SYNC_CHAR);
+	crsf_set_len(frame, CRSF_PLDLEN_RATE + CRSF_LEN_TYPE + CRSF_LEN_CRC);
+	crsf_set_type(frame, CRSF_TYPE_RATE);
+
+	uint8_t* const payload = frame->frame + CRSF_IDX_PAYLOAD;
+
+	u16_to_buf_big_endian(payload, pitch_rate_dgegps);
+	u16_to_buf_big_endian(payload + 2, roll_rate_ddegps);
+	u16_to_buf_big_endian(payload + 4, yaw_rate_ddegps);
+
+	crsf_set_crc(frame, crsf_calc_crc8_frame(frame));
+}
+
+
+
+void crsf_framing_accel(struct crsf_frame* frame, int16_t lateral_accel_mg, int16_t longitudinal_accel_mg, int16_t vertical_accel_mg)
+{
+	assert(frame);
+
+	crsf_set_sync(frame, CRSF_SYNC_CHAR);
+	crsf_set_len(frame, CRSF_PLDLEN_ACCEL + CRSF_LEN_TYPE + CRSF_LEN_CRC);
+	crsf_set_type(frame, CRSF_TYPE_ACCEL);
+
+	uint8_t* const payload = frame->frame + CRSF_IDX_PAYLOAD;
+
+	u16_to_buf_big_endian(payload, lateral_accel_mg);
+	u16_to_buf_big_endian(payload + 2, longitudinal_accel_mg);
+	u16_to_buf_big_endian(payload + 4, vertical_accel_mg);
+
+	crsf_set_crc(frame, crsf_calc_crc8_frame(frame));
+}
 
 
 

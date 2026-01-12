@@ -1,2 +1,2 @@
 ../src/app/hardware/imu/imu.c:12:6:imu_init	2
-../src/app/hardware/imu/imu.c:23:6:imu_loop	1
+../src/app/hardware/imu/imu.c:21:6:imu_loop	1

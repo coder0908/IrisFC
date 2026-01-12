@@ -16,3 +16,4 @@
 
 bool trcivr_init();
 void trcivr_loop();
+void trcivr_uart_rx_cplt_callback(UART_HandleTypeDef *huart);

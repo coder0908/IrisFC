@@ -1,3 +1,3 @@
-../src/drivers/servo/servo.c:11:10:map	24	static
+../src/drivers/servo/servo.c:11:17:map	24	static
 ../src/drivers/servo/servo.c:16:6:servo_init	32	static
 ../src/drivers/servo/servo.c:38:6:servo_write	32	static

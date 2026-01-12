@@ -66,7 +66,7 @@ bool rp3_init()
 // msgbox_callback_fp
 static void crsf_tx_msgbox_callback(uint8_t msg[], uint8_t msg_len)
 {
-	uint8_t read_len = 0;
+	uint64_t read_len = 0;
 	crsf_parse_frames(&s_crsf_tx_queue, msg, msg_len, &read_len);
 }
 
@@ -77,7 +77,7 @@ void rp3_flush_tx()
 
 	while (crsf_pop_frame_queue(&s_crsf_tx_queue, &frame)) {
 
-//		HAL_UART_Transmit(s_huart, frame.frame, (uint16_t)crsf_get_frame_length(&frame), 200);
+		//		HAL_UART_Transmit(s_huart, frame.frame, (uint16_t)crsf_get_frame_length(&frame), 200);
 		HAL_UART_Transmit(&huart1, frame.frame, (uint16_t)crsf_get_frame_length(&frame), 200);
 	}
 }
@@ -90,7 +90,7 @@ void rp3_flush_rx()
 
 	s_is_uart_rx_buf_full = false;
 
-	uint8_t read_len = 0;
+	uint64_t read_len = 0;
 	crsf_parse_frames(&s_crsf_rx_queue, s_uart_rx_buf, UART_LEN_RXBUF, &read_len);
 
 	struct crsf_frame frame = {0,};

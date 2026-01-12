@@ -1,5 +1,5 @@
 ../src/lib/protocols/crsf/utils/crsf_frame_queue.c:14:6:crsf_init_frame_queue	16	static
-../src/lib/protocols/crsf/utils/crsf_frame_queue.c:24:6:crsf_push_frame_queue	40	static
-../src/lib/protocols/crsf/utils/crsf_frame_queue.c:40:6:crsf_pop_frame_queue	40	static
-../src/lib/protocols/crsf/utils/crsf_frame_queue.c:58:6:crsf_clear_frmae_queue	16	static
-../src/lib/protocols/crsf/utils/crsf_frame_queue.c:67:6:crsf_parse_frames	96	static
+../src/lib/protocols/crsf/utils/crsf_frame_queue.c:24:6:crsf_push_frame_queue	64	static
+../src/lib/protocols/crsf/utils/crsf_frame_queue.c:41:6:crsf_pop_frame_queue	48	static
+../src/lib/protocols/crsf/utils/crsf_frame_queue.c:59:6:crsf_clear_frmae_queue	16	static
+../src/lib/protocols/crsf/utils/crsf_frame_queue.c:68:6:crsf_parse_frames	136	static

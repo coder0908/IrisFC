@@ -35,6 +35,9 @@
 #define CRSF_PLDLEN_LINK_STATISTIC	10
 #define CRSF_PLDLEN_RC_CHANNELS		22
 #define CRSF_PLDLEN_ATTITUDE		6
+#define CRSF_PLDLEN_RATE		6
+#define CRSF_PLDLEN_ACCEL		6
+
 #define CRSF_PLDLEN_TEMPS(temperature_count)	((temperature_count) * 2 + 1)
 #define CRSF_PLDLEN_VOLTAGES(voltage_count)	((voltage_count) * 2 + 1)
 
@@ -59,7 +62,10 @@ enum crsf_type {
 	CRSF_TYPE_LINK_STATISTIC = 0x14,
 	CRSF_TYPE_RC_CHANNELS = 0x16,
 	CRSF_TYPE_ATTITUDE = 0x1E,
-	CRSF_TYPE_VOLTAGES = 0x0E
+	CRSF_TYPE_VOLTAGES = 0x0E,
+	/*not standard*/
+	CRSF_TYPE_RATE = 0x30,
+	CRSF_TYPE_ACCEL = 0x31
 };
 
 struct crsf_frame {
@@ -71,7 +77,7 @@ struct crsf_gps {
 	int32_t longitude_100ndeg;
 	uint16_t groundspeed_damph;
 	uint16_t heading_cdeg;
-	uint16_t alti_m;
+	uint16_t alt_m;
 	uint8_t satellites;
 };
 
@@ -92,7 +98,7 @@ struct crsf_gps_ex {
 	int16_t vertical_velocity_cmps;
 	int16_t horizontal_velocity_accuracy_cmps;
 	int16_t track_accuracy_deg;
-	int16_t alti_ellipsoid_m;
+	int16_t alt_ellipsoid_m;
 	int16_t horizontal_accuracy_cm;
 	int16_t vertical_accuracy_cm;
 	uint8_t reserved;
@@ -154,6 +160,18 @@ struct crsf_attitude {
 	int16_t pitch_angle_100urad;
 	int16_t roll_angle_100urad;
 	int16_t yaw_angle_100urad;
+};
+
+struct crsf_rate {
+	int16_t pitch_rate_ddegps;	//deci degree per second
+	int16_t roll_rate_ddegps;
+	int16_t yaw_rate_ddegps;
+};
+
+struct crsf_accel {
+	int16_t lateral_accel_mg;
+	int16_t longitudinal_accel_mg;
+	int16_t vertical_accel_mg;
 };
 
 static inline uint8_t crsf_get_sync(const struct crsf_frame* frame)
@@ -222,11 +240,13 @@ bool crsf_parse_temps(const struct crsf_frame* frame, struct crsf_temps* temps);
 bool crsf_parse_gps_time(const struct crsf_frame *frame, struct crsf_gps_time* gps_time);
 bool crsf_parse_gps_ex(const struct crsf_frame *frame, struct crsf_gps_ex* gps_ex);
 bool crsf_parse_airspeed(const struct crsf_frame *frame, struct crsf_airspeed *airspeed);
+bool crsf_parse_rate(const struct crsf_frame* frame, struct crsf_rate* rate);
+bool crsf_parse_accel(const struct crsf_frame* frame, struct crsf_accel* accel);
 
 void crsf_framing_gps(struct crsf_frame* frame, int32_t latitude_100ndeg, int32_t longitude_100ndeg,
-	uint16_t groundspeed_damph, uint16_t heading_cdeg, uint16_t altitude_m, uint8_t satellites);
+	uint16_t groundspeed_damph, uint16_t heading_cdeg, uint16_t alttude_m, uint8_t satellites);
 void crsf_framing_gps_ex(struct crsf_frame* frame, uint8_t fix_type, int16_t northward_velocity_cmps, int16_t eastward_velocity_cmps,
-	int16_t vertical_velocity_cmps, int16_t horizontal_velocity_accuracy_cmps, int16_t track_accuracy_deg, int16_t alti_ellipsoid_m,
+	int16_t vertical_velocity_cmps, int16_t horizontal_velocity_accuracy_cmps, int16_t track_accuracy_deg, int16_t alt_ellipsoid_m,
 	int16_t horizontal_accuracy_cm, int16_t vertical_accuracy_cm, uint8_t horizontal_dop_deci, uint8_t vertical_dop_deci);
 void crsf_framing_gps_time(struct crsf_frame* frame, int16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t minuate, uint8_t second, uint8_t millisecond);
 void crsf_framing_attitude(struct crsf_frame* frame, int16_t pitch_angle_100urad, int16_t roll_angle_100urad, int16_t yaw_angle_100urad);
@@ -235,4 +255,6 @@ void crsf_framing_variometer(struct crsf_frame* frame, int16_t vertical_velocity
 void crsf_framing_battery(struct crsf_frame* frame, int16_t voltage_10uv, int16_t current_10ua, uint32_t capacity_used_mah, uint8_t remaining_percet);
 void crsf_framing_voltages(struct crsf_frame* frame, uint8_t voltage_src_id, uint16_t voltages_mv[], uint8_t voltages_len);
 void crsf_framing_temps(struct crsf_frame* frame, uint8_t temp_src_id, int16_t temps_ddeg[], uint8_t temps_len);
+void crsf_framing_rate(struct crsf_frame* frame, int16_t pitch_rate_dgegps, int16_t roll_rate_ddegps, int16_t yaw_rate_ddegps);
+void crsf_framing_accel(struct crsf_frame* frame, int16_t lateral_accel_mg, int16_t longitudinal_accel_mg, int16_t vertical_accel_mg);
 

@@ -29,60 +29,50 @@ int _write(int file, char *p, int len)
 
 bool setup()
 {
-	bool ret = false;
 
-	ret = battery_init();
-	if (!ret) {
+	if (!trcivr_init()) {
 		return false;
 	}
 
-	ret = gps_init();
-	if (!ret) {
+	if (!battery_init()) {
 		return false;
 	}
 
-	ret = trcivr_init();
-	if (!ret) {
+	if (!consur_init()) {
 		return false;
 	}
 
-	ret = consur_init();
-	if (!ret) {
+	if (!imu_init()) {
 		return false;
 	}
 
-	ret = imu_init();
-	if (!ret) {
+	if (!gnss_init()) {
 		return false;
 	}
 
-	return ret;
+	return true;
 }
-
 
 void loop(void)
 {
-
-
 	trcivr_loop();
 	consur_loop();
 	battery_loop();
-	gps_loop();
 	imu_loop();
-
-
-
+	gnss_loop();
 }
+
+
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	trcivr_uart_rx_cplt_callback(huart);
-	gps_uart_rx_cplt_callback(huart);
+	gnss_uart_rx_cplt_callback(huart);
+
 }
 
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 {
-
 }
 
 

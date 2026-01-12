@@ -1,69 +1,102 @@
-/*
- * compfilter.c
- *
- *  Created on: 2025. 12. 6.
- *      Author: coder0908
- */
-
 #include <assert.h>
 #include <math.h>
-#include "platform/hal/platform_hal.h"
 #include "compfilter.h"
-#include "lib/math.h"
+#include "platform/hal/platform_hal.h"
 
-bool compfilter_calc_angle(struct compfilter *cmpf, float x_accel_g, float y_accel_g, float z_accel_g, float x_gyro_dps, float y_gyro_dps, float z_gyro_dps)
-{
-	assert(cmpf);
+#define DEG_TO_RAD (3.1415926535f / 180.0f)
+#define RAD_TO_DEG (180.0f / 3.1415926535f)
 
-	cmpf->x_gyro_dps = x_gyro_dps;
-	cmpf->y_gyro_dps = y_gyro_dps;
-	cmpf->z_gyro_dps = z_gyro_dps;
+void compfilter_init(struct compfilter *cmpf, float beta) {
+    cmpf->beta = beta;
+    cmpf->q0 = 1.0f; cmpf->q1 = 0.0f; cmpf->q2 = 0.0f; cmpf->q3 = 0.0f;
+    cmpf->prev_time_ms = 0;
+}
 
+bool compfilter_calc_angle(struct compfilter *cmpf, float ax, float ay, float az, float gx, float gy, float gz) {
+    uint32_t now = HAL_GetTick();
+    if (cmpf->prev_time_ms == 0) {
+        cmpf->prev_time_ms = now;
+        return false;
+    }
+    float dt = (float)(now - cmpf->prev_time_ms) / 1000.0f;
+    if (dt <= 0.0f) return false;
+    cmpf->prev_time_ms = now;
 
-	uint32_t current_time_ms = HAL_GetTick();
-	if (current_time_ms == cmpf->prev_time_ms) {
-		return false;
-	}
-	float dt_s = ((float)current_time_ms - (float)cmpf->prev_time_ms) / 1000.0f;
+    // 1. 단위 변환 및 정규화
+    gx *= DEG_TO_RAD;
+    gy *= DEG_TO_RAD;
+    gz *= DEG_TO_RAD;
 
-	float add_x_angle_by_gyro_deg = x_gyro_dps * dt_s;	//현재 루프에서 추가된 각도
-	float add_y_angle_by_gyro_deg = y_gyro_dps * dt_s;	//현재 루프에서 추가된 각도
-	float add_z_angle_by_gyro_deg = z_gyro_dps * dt_s;	//현재 루프에서 추가된 각도
+    float norm = sqrtf(ax*ax + ay*ay + az*az);
+    if (norm < 0.0001f) return false; // Zero-g 방지
+    ax /= norm; ay /= norm; az /= norm;
 
+    // [참고] 필요하다면 여기서 축을 바꿉니다.
+    // 예: float tx = ax; ax = ay; ay = tx;
 
-	cmpf->x_angle_deg -= add_y_angle_by_gyro_deg * sinf(DEG_TO_RAD(add_z_angle_by_gyro_deg));
-	cmpf->y_angle_deg += add_x_angle_by_gyro_deg * sinf(DEG_TO_RAD(add_z_angle_by_gyro_deg));
-	cmpf->z_angle_deg += add_z_angle_by_gyro_deg;
+    // 2. Madgwick 알고리즘 (경사 하강법 단계)
+    float q0 = cmpf->q0, q1 = cmpf->q1, q2 = cmpf->q2, q3 = cmpf->q3;
+    float _2q0 = 2.0f * q0;
+    float _2q1 = 2.0f * q1;
+    float _2q2 = 2.0f * q2;
+    float _2q3 = 2.0f * q3;
+//    float _4q0 = 4.0f * q0;
+    float _4q1 = 4.0f * q1;
+    float _4q2 = 4.0f * q2;
+//    float _8q1 = 8.0f * q1;
+//    float _8q2 = 8.0f * q2;
+//    float q0q0 = q0 * q0;
+//    float q1q1 = q1 * q1;
+//    float q2q2 = q2 * q2;
+//    float q3q3 = q3 * q3;
 
-//	cmpf->total_accel_vevtor = sqrtf((x_accel_g*x_accel_g) + (y_accel_g*y_accel_g) + (z_accel_g* z_accel_g));
+    // Gradient objective function: f(q, a) = q*g*q' - a
+    float f1 = _2q1 * q3 - _2q0 * q2 - ax;
+    float f2 = _2q0 * q1 + _2q2 * q3 - ay;
+    float f3 = 1.0f - _2q1 * q1 - _2q2 * q2 - az;
 
-	float x_angle_by_accel_deg = atan2f(y_accel_g, sqrtf(x_accel_g*x_accel_g + z_accel_g*z_accel_g)) * RADIAN;
-	float y_angle_by_accel_deg = atan2f(-x_accel_g, sqrtf(y_accel_g*y_accel_g + z_accel_g*z_accel_g)) * RADIAN;
+    // Jacobian: J^T * f
+    float s0 = -_2q2 * f1 + _2q1 * f2;
+    float s1 =  _2q3 * f1 + _2q0 * f2 - _4q1 * f3;
+    float s2 = -_2q0 * f1 + _2q3 * f2 - _4q2 * f3;
+    float s3 =  _2q1 * f1 + _2q2 * f2;
 
-	float alpha = cmpf->alpha;
+    // Gradient 정규화
+    norm = sqrtf(s0*s0 + s1*s1 + s2*s2 + s3*s3);
+    if (norm > 0.0001f) {
+        s0 /= norm; s1 /= norm; s2 /= norm; s3 /= norm;
+    }
 
-	cmpf->x_angle_deg = (1 - alpha) * x_angle_by_accel_deg + alpha * (cmpf->x_angle_deg + add_x_angle_by_gyro_deg);
-	cmpf->y_angle_deg = (1 - alpha) * y_angle_by_accel_deg + alpha * (cmpf->y_angle_deg + add_y_angle_by_gyro_deg);
+    // 자이로스코프에 의한 변화량 반영 + Beta(가속도계) 보정
+    float qDot0 = 0.5f * (-q1 * gx - q2 * gy - q3 * gz) - cmpf->beta * s0;
+    float qDot1 = 0.5f * ( q0 * gx + q2 * gz - q3 * gy) - cmpf->beta * s1;
+    float qDot2 = 0.5f * ( q0 * gy - q1 * gz + q3 * gx) - cmpf->beta * s2;
+    float qDot3 = 0.5f * ( q0 * gz + q1 * gy - q2 * gx) - cmpf->beta * s3;
 
-	if (cmpf->x_angle_deg >= 180) {
-		cmpf->x_angle_deg -= 360;
-	} else if (cmpf->x_angle_deg < -180) {
-		cmpf->x_angle_deg += 360;
-	}
+    // 적분 및 정규화
+    cmpf->q0 += qDot0 * dt;
+    cmpf->q1 += qDot1 * dt;
+    cmpf->q2 += qDot2 * dt;
+    cmpf->q3 += qDot3 * dt;
 
-	if (cmpf->y_angle_deg >= 180) {
-		cmpf->y_angle_deg -= 360;
-	} else if (cmpf->y_angle_deg < -180) {
-		cmpf->y_angle_deg += 360;
-	}
+    norm = sqrtf(cmpf->q0*cmpf->q0 + cmpf->q1*cmpf->q1 + cmpf->q2*cmpf->q2 + cmpf->q3*cmpf->q3);
+    cmpf->q0 /= norm; cmpf->q1 /= norm; cmpf->q2 /= norm; cmpf->q3 /= norm;
 
-	if (cmpf->z_angle_deg >= 180) {
-		cmpf->z_angle_deg -= 360;
-	} else if (cmpf->z_angle_deg < -180) {
-		cmpf->z_angle_deg += 360;
-	}
+    // 3. 오일러 각도 추출 (표준 NED 좌표계 기준)
+    q0 = cmpf->q0; q1 = cmpf->q1; q2 = cmpf->q2; q3 = cmpf->q3;
 
-	cmpf->prev_time_ms = HAL_GetTick();
+    // Roll (x-axis rotation)
+    cmpf->roll_deg = atan2f(2.0f * (q0 * q1 + q2 * q3), 1.0f - 2.0f * (q1 * q1 + q2 * q2)) * RAD_TO_DEG;
 
-	return true;
+    // Pitch (y-axis rotation)
+    float sinp = 2.0f * (q0 * q2 - q3 * q1);
+    if (fabsf(sinp) >= 1.0f)
+        cmpf->pitch_deg = copysignf(90.0f, sinp);
+    else
+        cmpf->pitch_deg = asinf(sinp) * RAD_TO_DEG;
+
+    // Yaw (z-axis rotation)
+    cmpf->yaw_deg = atan2f(2.0f * (q0 * q3 + q1 * q2), 1.0f - 2.0f * (q2 * q2 + q3 * q3)) * RAD_TO_DEG;
+
+    return true;
 }

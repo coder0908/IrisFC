@@ -11,9 +11,7 @@
 
 bool imu_init()
 {
-	bool tmp = false;
-	tmp = app_icm20602_init();
-	if (!tmp) {
+	if (!app_icm20602_init()) {
 		return false;
 	}
 

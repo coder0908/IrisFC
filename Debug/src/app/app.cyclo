@@ -1,5 +1,5 @@
 ../src/app/app.c:24:5:_write	1
 ../src/app/app.c:30:6:setup	6
-../src/app/app.c:63:6:loop	1
-../src/app/app.c:77:6:HAL_UART_RxCpltCallback	1
-../src/app/app.c:83:6:HAL_UART_ErrorCallback	1
+../src/app/app.c:56:6:loop	1
+../src/app/app.c:67:6:HAL_UART_RxCpltCallback	1
+../src/app/app.c:74:6:HAL_UART_ErrorCallback	1

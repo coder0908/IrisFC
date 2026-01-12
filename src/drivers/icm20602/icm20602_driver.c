@@ -7,7 +7,7 @@
 
 
 #include <assert.h>
-#include "icm20602.h"
+#include "icm20602_driver.h"
 
 static void en_cs(struct icm20602 *imu)
 {

@@ -27,6 +27,7 @@ SUBDIRS := \
 src/app \
 src/app/controller \
 src/app/hardware/battery \
+src/app/hardware/compass \
 src/app/hardware/consur \
 src/app/hardware/gnss \
 src/app/hardware/gnss/neom8n \
@@ -36,6 +37,7 @@ src/app/hardware/tranceiver/rp3 \
 src/app/hardware/tranceiver/rtt24 \
 src/app/hardware/tranceiver \
 src/app/modules/attitude \
+src/drivers/hmc5883l_driver \
 src/drivers/icm20602 \
 src/drivers/servo \
 src/lib/compfilter \

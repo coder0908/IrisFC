@@ -10,23 +10,22 @@
 #include "neom8n/neom8n.h"
 #include "gnss.h"
 
-bool gps_init()
+bool gnss_init()
 {
-	bool ret = false;
-	ret = neom8n_init();
-	if (!ret) {
+
+	if (!neom8n_init()) {
 		return false;
 	}
 
 	return true;
 }
 
-void gps_loop()
+void gnss_loop()
 {
 	neom8n_loop();
 }
 
-void gps_uart_rx_cplt_callback(UART_HandleTypeDef *huart)
+void gnss_uart_rx_cplt_callback(UART_HandleTypeDef *huart)
 {
 	neom8n_uart_rx_cplt_callback(huart);
 }
