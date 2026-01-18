@@ -1,2 +1,2 @@
 ../src/app/modules/attitude/attitude.c:17:6:attitude_init	3
-../src/app/modules/attitude/attitude.c:33:6:attitude_loop	1
+../src/app/modules/attitude/attitude.c:30:6:attitude_loop	1

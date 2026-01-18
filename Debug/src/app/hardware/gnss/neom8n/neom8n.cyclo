@@ -1,6 +1,0 @@
-C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/lib/protocols/crsf/crsf.h:184:23:crsf_get_len	1
-C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/lib/protocols/crsf/crsf.h:222:23:crsf_get_frame_length	1
-../src/app/hardware/gnss/neom8n/neom8n.c:32:6:neom8n_init	4
-../src/app/hardware/gnss/neom8n/neom8n.c:53:14:hmc5883l_compute_heading	3
-../src/app/hardware/gnss/neom8n/neom8n.c:81:6:neom8n_loop	4
-../src/app/hardware/gnss/neom8n/neom8n.c:131:6:neom8n_uart_rx_cplt_callback	2

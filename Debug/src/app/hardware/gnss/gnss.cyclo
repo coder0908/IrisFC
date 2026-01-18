@@ -1,3 +1,0 @@
-../src/app/hardware/gnss/gnss.c:13:6:gnss_init	2
-../src/app/hardware/gnss/gnss.c:23:6:gnss_loop	1
-../src/app/hardware/gnss/gnss.c:28:6:gnss_uart_rx_cplt_callback	1

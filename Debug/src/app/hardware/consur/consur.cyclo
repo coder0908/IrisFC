@@ -1,3 +1,0 @@
-../src/app/hardware/consur/consur.c:23:6:consur_init	13
-../src/app/hardware/consur/consur.c:94:13:crsf_rx_msgbox_callback	1
-../src/app/hardware/consur/consur.c:102:6:consur_loop	6

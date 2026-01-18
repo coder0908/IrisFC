@@ -5,14 +5,14 @@
 #include <stdint.h>
 
 struct compfilter {
-    float beta;
-    uint32_t prev_time_ms;
+	float beta;
+	uint32_t prev_time_ms;
 
-    float pitch_deg; // X축 방향 기울기 (사용자 정의)
-    float roll_deg;  // Y축 방향 기울기 (사용자 정의)
-    float yaw_deg;
+	float pitch_deg; // X축 방향 기울기 (사용자 정의)
+	float roll_deg;  // Y축 방향 기울기 (사용자 정의)
+	float yaw_deg;
 
-    float q0, q1, q2, q3;
+	float q0, q1, q2, q3;
 };
 
 void compfilter_init(struct compfilter *cmpf, float beta);

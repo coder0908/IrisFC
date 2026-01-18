@@ -25,7 +25,6 @@ OBJCOPY_BIN :=
 # Every subdirectory with source files must be described here
 SUBDIRS := \
 src/app \
-src/app/controller \
 src/app/hardware/battery \
 src/app/hardware/compass \
 src/app/hardware/consur \
@@ -41,12 +40,12 @@ src/drivers/hmc5883l_driver \
 src/drivers/icm20602 \
 src/drivers/servo \
 src/lib/compfilter \
+src/lib/crsf \
+src/lib/crsf/utils \
 src/lib \
 src/lib/pid \
-src/lib/protocols/crsf \
-src/lib/protocols/crsf/utils \
-src/lib/protocols/ubx \
-src/lib/protocols/ubx/utils \
+src/lib/ubx \
+src/lib/ubx/utils \
 src \
 src/middleware/msgbox \
 src/platform/hal/Core/Src \

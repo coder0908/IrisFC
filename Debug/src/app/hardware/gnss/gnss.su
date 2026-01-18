@@ -1,3 +1,0 @@
-../src/app/hardware/gnss/gnss.c:13:6:gnss_init	8	static
-../src/app/hardware/gnss/gnss.c:23:6:gnss_loop	8	static
-../src/app/hardware/gnss/gnss.c:28:6:gnss_uart_rx_cplt_callback	16	static

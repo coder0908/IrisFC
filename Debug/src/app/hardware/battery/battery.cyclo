@@ -1,5 +1,0 @@
-C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/lib/protocols/crsf/utils/../crsf.h:184:23:crsf_get_len	1
-C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/lib/protocols/crsf/utils/../crsf.h:222:23:crsf_get_frame_length	1
-../src/app/hardware/battery/battery.c:27:6:battery_init	3
-../src/app/hardware/battery/battery.c:42:13:battery_read_voltage	1
-../src/app/hardware/battery/battery.c:51:6:battery_loop	1

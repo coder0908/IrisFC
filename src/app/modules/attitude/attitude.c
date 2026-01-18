@@ -16,13 +16,10 @@ static struct cascade_pid s_pitch_cpid;
 
 bool attitude_init()
 {
-	bool ret = false;
-	ret = cascade_pid_init(&s_roll_cpid, 6, 0.00005, 0.0005, 0, -30, 30, 0.7, 0.00005, 0.0001, 0, -30, 30);
-	if (!ret) {
+	if (!cascade_pid_init(&s_roll_cpid, 6, 0.00005, 0.0005, 0, -30, 30, 0.7, 0.00005, 0.0001, 0, -30, 30)) {
 		return false;
 	}
-	ret = cascade_pid_init(&s_pitch_cpid, 6, 0.00005, 0.0005, 0, -30, 30, 0.7, 0.00005, 0.0001, 0, -30, 30);
-	if (!ret) {
+	if (!cascade_pid_init(&s_pitch_cpid, 6, 0.00005, 0.0005, 0, -30, 30, 0.7, 0.00005, 0.0001, 0, -30, 30)) {
 		return false;
 	}
 

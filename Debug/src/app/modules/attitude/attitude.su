@@ -1,2 +1,2 @@
-../src/app/modules/attitude/attitude.c:17:6:attitude_init	16	static
-../src/app/modules/attitude/attitude.c:33:6:attitude_loop	4	static
+../src/app/modules/attitude/attitude.c:17:6:attitude_init	8	static
+../src/app/modules/attitude/attitude.c:30:6:attitude_loop	4	static

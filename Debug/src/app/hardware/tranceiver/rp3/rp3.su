@@ -1,7 +1,0 @@
-C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/lib/protocols/crsf/utils/../crsf.h:184:23:crsf_get_len	16	static
-C:/Users/unRR/Workspace/STM32CubeIDE/workspace_1.19.0/flight_controller/src/lib/protocols/crsf/utils/../crsf.h:222:23:crsf_get_frame_length	16	static
-../src/app/hardware/tranceiver/rp3/rp3.c:28:6:rp3_init	16	static
-../src/app/hardware/tranceiver/rp3/rp3.c:67:13:crsf_tx_msgbox_callback	40	static
-../src/app/hardware/tranceiver/rp3/rp3.c:73:6:rp3_flush_tx	80	static
-../src/app/hardware/tranceiver/rp3/rp3.c:85:6:rp3_flush_rx	104	static
-../src/app/hardware/tranceiver/rp3/rp3.c:114:6:rp3_uart_rx_cplt_callback	16	static

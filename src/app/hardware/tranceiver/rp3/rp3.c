@@ -7,7 +7,7 @@
 
 #include "usart.h"
 #include "middleware/msgbox/msgbox.h"
-#include "lib/protocols/crsf/utils/crsf_frame_queue.h"
+#include "lib/crsf/utils/crsf_frame_queue.h"
 #include "app/hardware/tranceiver/tranceiver.h"
 #include "rp3.h"
 

@@ -1,5 +1,5 @@
 ../src/lib/pid/pid.c:15:6:single_pid_init	1
-../src/lib/pid/pid.c:36:6:cascade_pid_init	3
-../src/lib/pid/pid.c:54:6:single_pid_reset_error_sum	1
-../src/lib/pid/pid.c:61:6:single_pid_calc	4
-../src/lib/pid/pid.c:91:6:cascade_pid_calc	3
+../src/lib/pid/pid.c:34:6:cascade_pid_init	3
+../src/lib/pid/pid.c:52:6:single_pid_reset_error_sum	1
+../src/lib/pid/pid.c:59:6:single_pid_calc	4
+../src/lib/pid/pid.c:89:6:cascade_pid_calc	3

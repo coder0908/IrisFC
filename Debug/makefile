@@ -14,11 +14,11 @@ RM := rm -rf
 -include src/platform/hal/Core/Src/subdir.mk
 -include src/platform/hal/subdir.mk
 -include src/middleware/msgbox/subdir.mk
--include src/lib/protocols/ubx/utils/subdir.mk
--include src/lib/protocols/ubx/subdir.mk
--include src/lib/protocols/crsf/utils/subdir.mk
--include src/lib/protocols/crsf/subdir.mk
+-include src/lib/ubx/utils/subdir.mk
+-include src/lib/ubx/subdir.mk
 -include src/lib/pid/subdir.mk
+-include src/lib/crsf/utils/subdir.mk
+-include src/lib/crsf/subdir.mk
 -include src/lib/compfilter/subdir.mk
 -include src/lib/subdir.mk
 -include src/drivers/servo/subdir.mk
@@ -35,7 +35,6 @@ RM := rm -rf
 -include src/app/hardware/consur/subdir.mk
 -include src/app/hardware/compass/subdir.mk
 -include src/app/hardware/battery/subdir.mk
--include src/app/controller/subdir.mk
 -include src/app/subdir.mk
 -include src/subdir.mk
 -include objects.mk

@@ -26,8 +26,6 @@ bool single_pid_init(struct single_pid *spid, float kp, float ki, float kd, floa
 	spid->prev_time = HAL_GetTick();
 	spid->prev_state = 0;
 
-
-
 	spid->pid_result = 0;
 
 	return true;
